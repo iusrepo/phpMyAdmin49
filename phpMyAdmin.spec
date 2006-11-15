@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 2.9.1
-Release: 1alpha
+Release: 2alpha
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
@@ -40,7 +40,8 @@ rm -rf %{buildroot}
 ln -s %{_sysconfdir}/%{name}/config.inc.php %{buildroot}/%{_datadir}/%{name}/config.inc.php
 
 %{__rm} -f %{buildroot}/%{_datadir}/%{name}/*txt
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/[IRLCT]*
+%{__rm} -f %{buildroot}/%{_datadir}/%{name}/[IRLT]*
+%{__rm} -f %{buildroot}/%{_datadir}/%{name}/CREDITS
 %{__rm} -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
 
 %clean
@@ -60,6 +61,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Wed Nov 15 2006 Mike McGrath <imlinux@gmail.com> 2.9.1-2alpha
+- Fixed 215159
+
 * Fri Nov 10 2006 Mike McGrath <imlinux@gmail.com> 2.9.1-1alpha
 - Added alpha tag since this is a release candidate
 
