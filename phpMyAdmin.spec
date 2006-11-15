@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 2.9.1
-Release: 2alpha
+Release: 3alpha%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Wed Nov 15 2006 Mike McGrath <imlinux@gmail.com> 2.9.1-3alpha
+- Added dist tag
+
 * Wed Nov 15 2006 Mike McGrath <imlinux@gmail.com> 2.9.1-2alpha
 - Fixed 215159
 
