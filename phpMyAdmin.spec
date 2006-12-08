@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 2.9.1.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
@@ -27,7 +27,7 @@ manage keys on fields, manage privileges,export data into various formats and
 is available in 50 languages
 
 %prep
-%setup -qn phpMyAdmin-%{version}-rc2-all-languages
+%setup -qn phpMyAdmin-%{version}-all-languages
 
 %install
 rm -rf %{buildroot}
@@ -61,8 +61,12 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Fri Dec 08 2006 Mike McGrath <imlinux@gmail.com> 2.9.1.1-2
+- Fixed bug in spec file
+
 * Fri Dec 08 2006 Mike McGrath <imlinux@gmail.com> 2.9.1.1-1
 - Upstream released new version
+
 * Wed Nov 15 2006 Mike McGrath <imlinux@gmail.com> 2.9.1-3alpha
 - Added dist tag
 
