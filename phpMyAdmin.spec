@@ -1,12 +1,12 @@
 Name: phpMyAdmin
-Version: 2.9.1
-Release: 3alpha%{?dist}
+Version: 2.9.1.1
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
 License: GPL
 URL: http://www.phpmyadmin.net/	
-Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-rc2-all-languages.tar.bz2
+Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -61,6 +61,8 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Fri Dec 08 2006 Mike McGrath <imlinux@gmail.com> 2.9.1.1-1
+- Upstream released new version
 * Wed Nov 15 2006 Mike McGrath <imlinux@gmail.com> 2.9.1-3alpha
 - Added dist tag
 
