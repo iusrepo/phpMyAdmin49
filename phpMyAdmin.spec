@@ -1,6 +1,6 @@
 Name: phpMyAdmin
-Version: 2.9.1.1
-Release: 2%{?dist}
+Version: 2.9.2
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Sat Jan 20 2007 Mike McGrath <imlinux@gmail.com> 2.9.2-1
+- Upstream released new version
+
 * Fri Dec 08 2006 Mike McGrath <imlinux@gmail.com> 2.9.1.1-2
 - Fixed bug in spec file
 
