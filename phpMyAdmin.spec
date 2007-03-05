@@ -1,12 +1,12 @@
 Name: phpMyAdmin
-Version: 2.9.2
+Version: 2.10.0.2
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
 License: GPL
 URL: http://www.phpmyadmin.net/	
-Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-all-languages.tar.bz2
+Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-all-languages-utf-8-only.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -27,7 +27,7 @@ manage keys on fields, manage privileges,export data into various formats and
 is available in 50 languages
 
 %prep
-%setup -qn phpMyAdmin-%{version}-all-languages
+%setup -qn phpMyAdmin-%{version}-all-languages-utf-8-only
 
 %install
 rm -rf %{buildroot}
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Sun Mar 04 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2
+- Upstream released new version
+
 * Sat Jan 20 2007 Mike McGrath <imlinux@gmail.com> 2.9.2-1
 - Upstream released new version
 
