@@ -1,12 +1,12 @@
 Name: phpMyAdmin
 Version: 2.10.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
 License: GPL
 URL: http://www.phpmyadmin.net/	
-Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-all-languages-utf-8-only.tar.bz2
+Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -61,7 +61,10 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
-* Sun Mar 04 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2
+* Sat Mar 10 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2-2
+- Switched to the actual all-languages, not just utf-8
+
+* Sun Mar 04 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2-1
 - Upstream released new version
 
 * Sat Jan 20 2007 Mike McGrath <imlinux@gmail.com> 2.9.2-1
