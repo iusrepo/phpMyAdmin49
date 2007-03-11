@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 2.10.0.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
@@ -27,7 +27,7 @@ manage keys on fields, manage privileges,export data into various formats and
 is available in 50 languages
 
 %prep
-%setup -qn phpMyAdmin-%{version}-all-languages-utf-8-only
+%setup -qn phpMyAdmin-%{version}-all-languages
 
 %install
 rm -rf %{buildroot}
@@ -61,7 +61,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
-* Sat Mar 10 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2-2
+* Sat Mar 10 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2-3
 - Switched to the actual all-languages, not just utf-8
 
 * Sun Mar 04 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.0.2-1
