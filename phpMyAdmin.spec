@@ -1,12 +1,12 @@
 Name: phpMyAdmin
-Version: 2.10.3
+Version: 2.11.0
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
-License: GPL
+License: GPLv2+
 URL: http://www.phpmyadmin.net/	
-Source0: http://dl.sourceforge.net/sourceforge/phpMyAdmin/phpMyAdmin-%{version}-all-languages.tar.bz2
+Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -61,6 +61,11 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Thu Sep 06 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.0-1
+- Upstream released new version
+- Altered sources file as required
+- Added proper license
+
 * Mon Jul 23 2007 Mike McGrath <mmcgrath@redhat.com> 2.10.3-1
 - Upstream released new version
 
