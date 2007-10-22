@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 2.11.0
+Version: 2.11.1.2
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Mon Oct 22 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.1.2-1
+* upstream released new version
+
 * Thu Sep 06 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.0-1
 - Upstream released new version
 - Altered sources file as required
