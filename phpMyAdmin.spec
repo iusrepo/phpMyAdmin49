@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 2.11.2.2
+Version: 2.11.3
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -9,6 +9,7 @@ URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
+Patch0: phpMyAdmin-2.11.3-CVE-2007-0095.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -16,8 +17,7 @@ Requires: webserver
 Requires: php >= 4.1.0
 Requires: php-mysql  >= 4.1.0
 Requires: php-mbstring >= 4.1.0
-Requires(postun): /sbin/service
-Requires(post): /sbin/service
+Provides: phpmyadmin 
 
 %description
 phpMyAdmin is a tool written in PHP intended to handle the administration of
@@ -28,6 +28,7 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}-all-languages
+%patch0 -p1
 
 %install
 rm -rf %{buildroot}
@@ -47,12 +48,6 @@ ln -s %{_sysconfdir}/%{name}/config.inc.php %{buildroot}/%{_datadir}/%{name}/con
 %clean
 rm -rf %{buildroot}
 
-%post
-/sbin/service httpd condrestart > /dev/null 2>&1 || :
-
-%postun
-/sbin/service httpd condrestart > /dev/null 2>&1 || :
-
 %files
 %defattr(-,root,root,-)
 %doc INSTALL README LICENSE CREDITS TODO Documentation.txt
@@ -61,6 +56,12 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Sun Dec 09 2007 Robert Scheck <robert@fedoraproject.org> 2.11.2.2-1
+- Upstream released 2.11.3
+- Removed the RPM scriptlets doing httpd restarts (#227025)
+- Patched an information disclosure known as CVE-2007-0095 (#221694)
+- Provide virtual phpmyadmin package and a httpd alias (#231431)
+
 * Wed Nov 21 2007 Robert Scheck <robert@fedoraproject.org> 2.11.2.2-1
 - Upstream released 2.11.2.2 (#393771)
 

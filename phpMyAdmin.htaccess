@@ -6,6 +6,7 @@
 # dangerous unless properly secured by SSL
 
 Alias /phpMyAdmin /usr/share/phpMyAdmin
+Alias /phpmyadmin /usr/share/phpMyAdmin
 <Directory /usr/share/phpMyAdmin/>
    order deny,allow
    deny from all
