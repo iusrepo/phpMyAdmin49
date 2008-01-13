@@ -27,7 +27,7 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
 #
 #<IfModule mod_security.c>
 #    <LocationMatch "/phpMyAdmin/(.+)">
-#        SecFilterInheritance Off
+#        SecRuleInheritance Off
 #    </LocationMatch>
 #</IfModule>
 

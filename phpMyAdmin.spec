@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 2.11.3
+Version: 2.11.4
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -9,7 +9,6 @@ URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
-Patch0: phpMyAdmin-2.11.3-CVE-2007-0095.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -28,7 +27,6 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}-all-languages
-%patch0 -p1
 
 %install
 rm -rf %{buildroot}
@@ -56,7 +54,11 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
-* Sun Dec 09 2007 Robert Scheck <robert@fedoraproject.org> 2.11.2.2-1
+* Sun Jan 13 2008 Robert Scheck <robert@fedoraproject.org> 2.11.4-1
+- Upstream released 2.11.4
+- Corrected mod_security example in configuration file (#427119)
+
+* Sun Dec 09 2007 Robert Scheck <robert@fedoraproject.org> 2.11.3-1
 - Upstream released 2.11.3
 - Removed the RPM scriptlets doing httpd restarts (#227025)
 - Patched an information disclosure known as CVE-2007-0095 (#221694)
