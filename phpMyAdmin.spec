@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 2.11.4
+Version: 2.11.5
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Mon Mar 03 2008 Robert Scheck <robert@fedoraproject.org> 2.11.5-1
+- Upstream released 2.11.5
+
 * Sun Jan 13 2008 Robert Scheck <robert@fedoraproject.org> 2.11.4-1
 - Upstream released 2.11.4
 - Corrected mod_security example in configuration file (#427119)
