@@ -1,12 +1,12 @@
 Name: phpMyAdmin
 Version: 2.11.7
-Release: 0.2%{?dist}
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
 License: GPLv2+
 URL: http://www.phpmyadmin.net/	
-Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-rc2-all-languages.tar.bz2
+Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -26,7 +26,7 @@ manage keys on fields, manage privileges,export data into various formats and
 is available in 50 languages
 
 %prep
-%setup -qn phpMyAdmin-%{version}-rc2-all-languages
+%setup -qn phpMyAdmin-%{version}-all-languages
 
 %install
 rm -rf %{buildroot}
@@ -54,8 +54,8 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
-* Mon Jun 23 2008 Robert Scheck <robert@fedoraproject.org> 2.11.7-0.2
-- Upstream released 2.11.7-rc2 with non-documented security fix
+* Mon Jun 23 2008 Robert Scheck <robert@fedoraproject.org> 2.11.7-1
+- Upstream released 2.11.7 (#452497)
 
 * Tue Apr 29 2008 Robert Scheck <robert@fedoraproject.org> 2.11.6-1
 - Upstream released 2.11.6
