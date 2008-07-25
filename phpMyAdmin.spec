@@ -26,7 +26,7 @@ manage keys on fields, manage privileges,export data into various formats and
 is available in 50 languages
 
 %prep
-%setup -qn phpMyAdmin-%{version}-all-languages
+%setup -qn phpMyAdmin-%{version}-rc1-all-languages
 
 %install
 rm -rf %{buildroot}
