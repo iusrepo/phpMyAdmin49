@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 2.11.9.2
+Version: 3.0.0
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -13,9 +13,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires: webserver 
-Requires: php >= 4.1.0
-Requires: php-mysql  >= 4.1.0
-Requires: php-mbstring >= 4.1.0
+Requires: php >= 5.2.0
+Requires: php-mysql >= 5.2.0
+Requires: php-mbstring >= 5.2.0
 Provides: phpmyadmin 
 
 %description
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Sun Oct 19 2008 Robert Scheck <robert@fedoraproject.org> 3.0.0-1
+- Upstream released 3.0.0
+
 * Mon Sep 22 2008 Robert Scheck <robert@fedoraproject.org> 2.11.9.2-1
 - Upstream released 2.11.9.2 (#463260)
 
