@@ -26,8 +26,8 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
 # filtering SQL etc.  This may break your mod_security implementation.
 #
 #<IfModule mod_security.c>
-#    <LocationMatch "/phpMyAdmin/(.+)">
+#    <Directory /usr/share/phpMyAdmin>
 #        SecRuleInheritance Off
-#    </LocationMatch>
+#    </Directory>
 #</IfModule>
 
