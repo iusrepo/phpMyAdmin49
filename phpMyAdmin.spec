@@ -1,6 +1,6 @@
 Name: phpMyAdmin
 Version: 3.2.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group:	Applications/Internet
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Tue Jun 30 2009 Robert Scheck <robert@fedoraproject.org> 3.2.0.1-1
 - Upstream released 3.2.0.1 (#508879)
 
