@@ -11,6 +11,7 @@ Alias /phpmyadmin /usr/share/phpMyAdmin
    order deny,allow
    deny from all
    allow from 127.0.0.1
+   allow from ::1
 </Directory>
 
 # This directory does not require access over HTTP - taken from the original
