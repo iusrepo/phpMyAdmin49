@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.2.2
+Version: 3.2.2.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -16,6 +16,7 @@ Requires: webserver
 Requires: php >= 5.2.0
 Requires: php-mysql >= 5.2.0
 Requires: php-mbstring >= 5.2.0
+Requires: php-mcrypt >= 5.2.0
 Provides: phpmyadmin 
 
 %description
@@ -54,6 +55,10 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Tue Oct 13 2009 Robert Scheck <robert@fedoraproject.org> 3.2.2.1-1
+- Upstream released 3.2.2.1 (#528769)
+- Require php-mcrypt for cookie authentication (#526979)
+
 * Sun Sep 13 2009 Robert Scheck <robert@fedoraproject.org> 3.2.2-1
 - Upstream released 3.2.2
 
