@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.2.3
+Version: 3.2.4
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -9,6 +9,7 @@ URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
+Patch0: phpMyAdmin-3.2.4-blowfish.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -28,6 +29,7 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}-all-languages
+%patch0 -p1
 
 %install
 rm -rf %{buildroot}
@@ -55,6 +57,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 
 %changelog
+* Thu Dec 03 2009 Robert Scheck <robert@fedoraproject.org> 3.2.4-1
+- Upstream released 3.2.4 (#540871, #540891)
+
 * Thu Nov 05 2009 Robert Scheck <robert@fedoraproject.org> 3.2.3-1
 - Upstream released 3.2.3
 
