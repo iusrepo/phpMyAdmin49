@@ -1,60 +1,77 @@
 Name: phpMyAdmin
-Version: 3.2.5
+Version: 3.3.3
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
-Group:	Applications/Internet
+Group: Applications/Internet
 License: GPLv2+
-URL: http://www.phpmyadmin.net/	
+URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
+Patch0: phpMyAdmin-3.3.3-vendor.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
-Requires: webserver 
+Requires: httpd
 Requires: php >= 5.2.0
 Requires: php-mysql >= 5.2.0
 Requires: php-mbstring >= 5.2.0
 Requires: php-mcrypt >= 5.2.0
-Provides: phpmyadmin 
+Requires: php-gd >= 5.2.0
+Provides: phpmyadmin = %{version}-%{release}
 
 %description
 phpMyAdmin is a tool written in PHP intended to handle the administration of
 MySQL over the Web. Currently it can create and drop databases,
 create/drop/alter tables, delete/edit/add fields, execute any SQL statement,
-manage keys on fields, manage privileges,export data into various formats and
-is available in 50 languages
+manage keys on fields, manage privileges, export data into various formats and
+is available in over 55 languages.
 
 %prep
-%setup -qn phpMyAdmin-%{version}-all-languages
+%setup -q -n %{name}-%{version}-all-languages
+%patch0 -p1
+
+# Setup vendor config file
+sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
+    -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
+    -e "/'CONFIG_FILE'/s@./config.inc.php@%{_sysconfdir}/%{name}/config.inc.php@" \
+    -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
+    -i libraries/vendor_config.php
+
+%build
 
 %install
 rm -rf %{buildroot}
-%{__mkdir} -p %{buildroot}/%{_datadir}/%{name}
-%{__mkdir} -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-%{__mkdir} -p %{buildroot}/%{_sysconfdir}/%{name}
-%{__cp} -ad ./* %{buildroot}/%{_datadir}/%{name}
-%{__cp} %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
-%{__cp} %{SOURCE1} %{buildroot}/%{_sysconfdir}/%{name}/config.inc.php
-ln -s %{_sysconfdir}/%{name}/config.inc.php %{buildroot}/%{_datadir}/%{name}/config.inc.php
+%{__mkdir} -p %{buildroot}{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/{upload,save,config}
+%{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
+%{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+%{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.inc.php
 
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/*txt
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/[IRLT]*
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/CREDITS
-%{__rm} -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
+%{__rm} -f %{buildroot}%{_datadir}/%{name}/{[CIRLT]*,*txt}
+%{__rm} -f %{buildroot}%{_datadir}/%{name}/{libraries,setup/lib}/.htaccess
+%{__rm} -rf %{buildroot}%{_datadir}/%{name}/{contrib,documentation-gsoc}
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc INSTALL README LICENSE CREDITS TODO Documentation.txt
-%{_datadir}/%{name}
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
-%config(noreplace) %{_sysconfdir}/%{name}
+%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt documentation-gsoc
+%{_datadir}/%{name}/
+%dir %{_sysconfdir}/%{name}/
+%config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%dir %{_localstatedir}/lib/%{name}/
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/upload
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/save
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 %changelog
+* Sat Jun 26 2010 Robert Scheck <robert@fedoraproject.org> 3.3.3-1
+- Upstream released 3.3.3 (#558322, #589288, #589487)
+
 * Sun Jan 10 2010 Robert Scheck <robert@fedoraproject.org> 3.2.5-1
 - Upstream released 3.2.5
 

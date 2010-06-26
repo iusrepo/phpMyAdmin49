@@ -1,4 +1,11 @@
 <?php
+/**
+ * phpMyAdmin configuration file, you can use it as base for the manual
+ * configuration. For easier setup you can use "setup/".
+ *
+ * All directives are explained in Documentation.html and on phpMyAdmin
+ * wiki <http://wiki.phpmyadmin.net>.
+ */
 
 /*
  * This is needed for cookie based authentication to encrypt password in
@@ -10,6 +17,7 @@ $cfg['blowfish_secret'] = ''; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
  * Server(s) configuration
  */
 $i = 0;
+
 // The $cfg['Servers'] array starts with $cfg['Servers'][1].  Do not use
 // $cfg['Servers'][0]. You can disable a server config entry by setting host
 // to ''. If you want more than one server, just copy following section
@@ -20,7 +28,7 @@ $cfg['Servers'][$i]['host']          = 'localhost'; // MySQL hostname or IP addr
 $cfg['Servers'][$i]['port']          = '';          // MySQL port - leave blank for default port
 $cfg['Servers'][$i]['socket']        = '';          // Path to the socket - leave blank for default socket
 $cfg['Servers'][$i]['connect_type']  = 'tcp';       // How to connect to MySQL server ('tcp' or 'socket')
-$cfg['Servers'][$i]['extension']     = 'mysql';     // The php MySQL extension to use ('mysql' or 'mysqli')
+$cfg['Servers'][$i]['extension']     = 'mysqli';    // The php MySQL extension to use ('mysql' or 'mysqli')
 $cfg['Servers'][$i]['compress']      = FALSE;       // Use compressed protocol for the MySQL connection
                                                     // (requires PHP >= 4.3.0)
 $cfg['Servers'][$i]['controluser']   = '';          // MySQL control user settings
@@ -73,4 +81,26 @@ $cfg['Servers'][$i]['AllowDeny']['order']           // Host authentication order
                                      = '';
 $cfg['Servers'][$i]['AllowDeny']['rules']           // Host authentication rules, leave blank for defaults
                                      = array();
+$cfg['Servers'][$i]['AllowNoPassword']              // Allow logins without a password. Do not change the FALSE
+                                     = FALSE;       // default unless you're running a passwordless MySQL server
+$cfg['Servers'][$i]['designer_coords']              // Leave blank (default) for no Designer support, otherwise
+                                     = '';          // set to suggested 'pma_designer_coords' if really needed
+$cfg['Servers'][$i]['bs_garbage_threshold']         // Blobstreaming: Recommented default value from upstream
+                                     = 50;          //   DEFAULT: '50'
+$cfg['Servers'][$i]['bs_repository_threshold']      // Blobstreaming: Recommented default value from upstream
+                                     = '32M';       //   DEFAULT: '32M'
+$cfg['Servers'][$i]['bs_temp_blob_timeout']         // Blobstreaming: Recommented default value from upstream
+                                     = 600;         //   DEFAULT: '600'
+$cfg['Servers'][$i]['bs_temp_log_threshold']        // Blobstreaming: Recommented default value from upstream
+                                     = '32M';       //   DEFAULT: '32M'
+/*
+ * End of servers configuration
+ */
+
+/*
+ * Directories for saving/loading files from server
+ */
+$cfg['UploadDir'] = '/var/lib/phpMyAdmin/upload';
+$cfg['SaveDir']   = '/var/lib/phpMyAdmin/save';
+
 ?>
