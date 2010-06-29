@@ -70,7 +70,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Tue Jun 29 2010 Robert Scheck <robert@fedoraproject.org> 3.3.4-1
-- Upstream released 3.3.4
+- Upstream released 3.3.4 (#609057)
 
 * Sat Jun 26 2010 Robert Scheck <robert@fedoraproject.org> 3.3.3-1
 - Upstream released 3.3.3 (#558322, #589288, #589487)
