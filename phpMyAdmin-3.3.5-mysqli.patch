@@ -1,0 +1,16 @@
+Patch by Will Palmer for phpMyAdmin >= 3.3.5, which fixes the wrong variable check at the nopassword option. More
+details can be found at: https://sourceforge.net/tracker/?func=detail&aid=3039269&group_id=23067&atid=377410
+
+--- phpMyAdmin-3.3.5-all-languages/libraries/dbi/mysqli.dbi.lib.php		2010-08-20 13:55:27.000000000 +0200
++++ phpMyAdmin-3.3.5-all-languages/libraries/dbi/mysqli.dbi.lib.php.mysqli	2010-08-20 22:25:11.000000000 +0200
+@@ -110,9 +110,8 @@
+     
+     if (!$server) {
+       $return_value = @mysqli_real_connect($link, $GLOBALS['cfg']['Server']['host'], $user, $password, false, $server_port, $server_socket, $client_flags);
+-
+       // Retry with empty password if we're allowed to
+-      if ($return_value == false && isset($cfg['Server']['nopassword']) && $cfg['Server']['nopassword'] && !$is_controluser) {
++      if ($return_value == false && isset($GLOBALS['cfg']['Server']['nopassword']) && $GLOBALS['cfg']['Server']['nopassword'] && !$is_controluser) {
+ 	  $return_value = @mysqli_real_connect($link, $GLOBALS['cfg']['Server']['host'], $user, '', false, $server_port, $server_socket, $client_flags);
+       }
+     } else {

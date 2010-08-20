@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.3.5
+Version: 3.3.5.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -10,6 +10,7 @@ Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}
 Source1: phpMyAdmin-config.inc.php
 Source2: phpMyAdmin.htaccess
 Patch0: phpMyAdmin-3.3.3-vendor.patch
+Patch1: phpMyAdmin-3.3.5-mysqli.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -31,6 +32,7 @@ is available in over 55 languages.
 %prep
 %setup -q -n %{name}-%{version}-all-languages
 %patch0 -p1
+%patch1 -p1
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
@@ -69,6 +71,10 @@ rm -rf %{buildroot}
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 %changelog
+* Fri Aug 20 2010 Robert Scheck <robert@fedoraproject.org> 3.3.5.1-1
+- Upstream released 3.3.5.1 (#625877, #625878)
+- Added patch to fix wrong variable check at nopassword (#622428)
+
 * Tue Jul 27 2010 Robert Scheck <robert@fedoraproject.org> 3.3.5-1
 - Upstream released 3.3.5 (#618586)
 
