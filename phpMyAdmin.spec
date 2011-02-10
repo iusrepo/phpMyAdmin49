@@ -1,5 +1,5 @@
 Name: phpMyAdmin
-Version: 3.3.9
+Version: 3.3.9.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 %changelog
+* Thu Feb 10 2011 Robert Scheck <robert@fedoraproject.org> 3.3.9.1-1
+- Upstream released 3.3.9.1
+
 * Mon Jan 03 2011 Robert Scheck <robert@fedoraproject.org> 3.3.9-1
 - Upstream released 3.3.9 (#666925)
 
