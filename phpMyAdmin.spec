@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 * Thu Feb 10 2011 Robert Scheck <robert@fedoraproject.org> 3.3.9.1-1
 - Upstream released 3.3.9.1
 
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Mon Jan 03 2011 Robert Scheck <robert@fedoraproject.org> 3.3.9-1
 - Upstream released 3.3.9 (#666925)
 
