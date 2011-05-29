@@ -1,64 +1,69 @@
-Name: phpMyAdmin
-Version: 3.3.10
-Release: 1%{?dist}
-Summary: Web based MySQL browser written in php
-
-Group: Applications/Internet
-License: GPLv2+
-URL: http://www.phpmyadmin.net/
-Source0: http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
-Source1: phpMyAdmin-config.inc.php
-Source2: phpMyAdmin.htaccess
-Patch0: phpMyAdmin-3.3.3-vendor.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch: noarch
-
-Requires: httpd
-Requires: php >= 5.2.0
-Requires: php-mysql >= 5.2.0
-Requires: php-mbstring >= 5.2.0
-Requires: php-mcrypt >= 5.2.0
-Requires: php-gd >= 5.2.0
-Provides: phpmyadmin = %{version}-%{release}
+Summary:	Handle the administration of MySQL over the World Wide Web
+Name:		phpMyAdmin
+Version:	3.4.1
+Release:	1%{?dist}
+License:	GPLv2+
+Group:		Applications/Internet
+URL:		http://www.phpmyadmin.net/
+Source0:	http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
+Source1:	phpMyAdmin-config.inc.php
+Source2:	phpMyAdmin.htaccess
+Requires:	httpd, php >= 5.2.0, php-mysql >= 5.2.0, php-mcrypt >= 5.2.0
+Requires:	php-mbstring >= 5.2.0, php-gd >= 5.2.0
+Provides:	phpmyadmin = %{version}-%{release}
+BuildArch:	noarch
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 phpMyAdmin is a tool written in PHP intended to handle the administration of
-MySQL over the Web. Currently it can create and drop databases,
-create/drop/alter tables, delete/edit/add fields, execute any SQL statement,
-manage keys on fields, manage privileges, export data into various formats and
-is available in over 55 languages.
+MySQL over the World Wide Web. Most frequently used operations are supported
+by the user interface (managing databases, tables, fields, relations, indexes,
+users, permissions), while you still have the ability to directly execute any
+SQL statement.
+
+Features include an intuitive web interface, support for most MySQL features
+(browse and drop databases, tables, views, fields and indexes, create, copy,
+drop, rename and alter databases, tables, fields and indexes, maintenance
+server, databases and tables, with proposals on server configuration, execute,
+edit and bookmark any SQL-statement, even batch-queries, manage MySQL users
+and privileges, manage stored procedures and triggers), import data from CSV
+and SQL, export data to various formats: CSV, SQL, XML, PDF, OpenDocument Text
+and Spreadsheet, Word, Excel, LATEX and others, administering multiple servers,
+creating PDF graphics of your database layout, creating complex queries using
+Query-by-example (QBE), searching globally in a database or a subset of it,
+transforming stored data into any format using a set of predefined functions,
+like displaying BLOB-data as image or download-link and much more...
 
 %prep
 %setup -q -n %{name}-%{version}-all-languages
-%patch0 -p1
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
-    -e "/'CONFIG_FILE'/s@./config.inc.php@%{_sysconfdir}/%{name}/config.inc.php@" \
+    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -i libraries/vendor_config.php
 
 %build
 
 %install
-rm -rf %{buildroot}
-%{__mkdir} -p %{buildroot}{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/{upload,save,config}
-%{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
-%{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
-%{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.inc.php
+rm -rf $RPM_BUILD_ROOT
+%{__mkdir} -p $RPM_BUILD_ROOT{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
+%{__mkdir} -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}/{upload,save,config}
+%{__cp} -ad ./* $RPM_BUILD_ROOT%{_datadir}/%{name}
+%{__cp} -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
+%{__cp} -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/config.inc.php
 
-%{__rm} -f %{buildroot}%{_datadir}/%{name}/{[CIRLT]*,*txt}
-%{__rm} -f %{buildroot}%{_datadir}/%{name}/{libraries,setup/lib}/.htaccess
-%{__rm} -rf %{buildroot}%{_datadir}/%{name}/{contrib,documentation-gsoc}
+%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{[CIRLT]*,*txt}
+%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{libraries,setup/{lib,frames}}/.htaccess
+%{__rm} -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/contrib
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt documentation-gsoc
+%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
@@ -69,6 +74,9 @@ rm -rf %{buildroot}
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 %changelog
+* Sun May 29 2011 Robert Scheck <robert@fedoraproject.org> 3.4.1-1
+- Upgrade to 3.4.1 (#704171)
+
 * Mon Mar 21 2011 Robert Scheck <robert@fedoraproject.org> 3.3.10-1
 - Upstream released 3.3.10 (#661335, #662366, #662367, #689213)
 
