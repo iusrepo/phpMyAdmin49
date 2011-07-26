@@ -48,15 +48,15 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/Chang
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__mkdir} -p $RPM_BUILD_ROOT{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
-%{__mkdir} -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}/{upload,save,config}
-%{__cp} -ad ./* $RPM_BUILD_ROOT%{_datadir}/%{name}
-%{__cp} -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
-%{__cp} -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/config.inc.php
+mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}/{upload,save,config}
+cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{name}
+install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/config.inc.php
 
-%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{[CIRLT]*,*txt}
-%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{libraries,setup/{lib,frames}}/.htaccess
-%{__rm} -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/contrib
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{[CIRLT]*,*txt}
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{libraries,setup/{lib,frames}}/.htaccess
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/contrib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
