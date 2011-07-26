@@ -1,7 +1,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	3.4.3.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 %changelog
+* Tue Jul 26 2011 Robert Scheck <robert@fedoraproject.org> 3.4.3.2-2
+- Disabled the warning for missing internal database relation
+
 * Mon Jul 25 2011 Robert Scheck <robert@fedoraproject.org> 3.4.3.2-1
 - Upgrade to 3.4.3.2 (#725377, #725381, #725382, #725383, #725384)
 

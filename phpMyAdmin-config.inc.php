@@ -103,4 +103,9 @@ $cfg['Servers'][$i]['bs_temp_log_threshold']        // Blobstreaming: Recommente
 $cfg['UploadDir'] = '/var/lib/phpMyAdmin/upload';
 $cfg['SaveDir']   = '/var/lib/phpMyAdmin/save';
 
+/*
+ * Disable the default warning that is displayed on the DB Details Structure
+ * page if any of the required Tables for the relation features is not found
+ */
+$cfg['PmaNoRelation_DisableWarning'] = TRUE;
 ?>
