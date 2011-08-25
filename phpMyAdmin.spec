@@ -1,15 +1,26 @@
+%define pkgname	phpMyAdmin
+
 Summary:	Handle the administration of MySQL over the World Wide Web
+%if 0%{?rhel} != 5
 Name:		phpMyAdmin
-Version:	3.4.3.2
-Release:	2%{?dist}
+%else
+Name:		phpMyAdmin3
+%endif
+Version:	3.4.4
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
-Source0:	http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}-all-languages.tar.bz2
+Source0:	http://downloads.sourceforge.net/sourceforge/%{pkgname}/%{pkgname}-%{version}-all-languages.tar.bz2
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
+%if 0%{?rhel} != 5
 Requires:	httpd, php >= 5.2.0, php-mysql >= 5.2.0, php-mcrypt >= 5.2.0
 Requires:	php-mbstring >= 5.2.0, php-gd >= 5.2.0
+%else
+Requires:	httpd, php53, php53-mysql, php53-mcrypt, php53-mbstring, php53-gd
+Provides:	phpMyAdmin = %{version}-%{release}
+%endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -35,28 +46,28 @@ transforming stored data into any format using a set of predefined functions,
 like displaying BLOB-data as image or download-link and much more...
 
 %prep
-%setup -q -n %{name}-%{version}-all-languages
+%setup -q -n %{pkgname}-%{version}-all-languages
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
-    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
-    -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
+    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{pkgname}/'@" \
+    -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
     -i libraries/vendor_config.php
 
 %build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}/{upload,save,config}
-cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{name}
-install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{name}.conf
-install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/config.inc.php
+mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{pkgname},%{_sysconfdir}/{httpd/conf.d,%{pkgname}}}
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}
+cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}
+install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
 
-rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{[CIRLT]*,*txt}
-rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/{libraries,setup/{lib,frames}}/.htaccess
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/contrib
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CIRLT]*,*txt}
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{libraries,setup/{lib,frames}}/.htaccess
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/contrib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -64,18 +75,22 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc ChangeLog README LICENSE CREDITS TODO Documentation.txt
-%{_datadir}/%{name}/
-%dir %{_sysconfdir}/%{name}/
-%config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%dir %{_localstatedir}/lib/%{name}/
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/upload
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/save
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}/config
+%{_datadir}/%{pkgname}/
+%dir %{_sysconfdir}/%{pkgname}/
+%config(noreplace) %{_sysconfdir}/%{pkgname}/config.inc.php
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
+%dir %{_localstatedir}/lib/%{pkgname}/
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/save
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Thu Aug 25 2011 Robert Scheck <robert@fedoraproject.org> 3.4.4-1
+- Upgrade to 3.4.4 (#733475, #733477, #733480)
+
 * Tue Jul 26 2011 Robert Scheck <robert@fedoraproject.org> 3.4.3.2-2
 - Disabled the warning for missing internal database relation
+- Reworked spec file to build phpMyAdmin3 for RHEL 5 (#725885)
 
 * Mon Jul 25 2011 Robert Scheck <robert@fedoraproject.org> 3.4.3.2-1
 - Upgrade to 3.4.3.2 (#725377, #725381, #725382, #725383, #725384)
