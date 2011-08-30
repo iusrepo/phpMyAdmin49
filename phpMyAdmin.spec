@@ -1,11 +1,7 @@
 %define pkgname	phpMyAdmin
 
 Summary:	Handle the administration of MySQL over the World Wide Web
-%if 0%{?rhel} != 5
 Name:		phpMyAdmin
-%else
-Name:		phpMyAdmin3
-%endif
 Version:	3.4.4
 Release:	1%{?dist}
 License:	GPLv2+
