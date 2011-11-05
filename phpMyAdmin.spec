@@ -51,6 +51,7 @@ like displaying BLOB-data as image or download-link and much more...
 
 %prep
 %setup -q -n %{pkgname}-%{version}-all-languages
+%patch0 -p1
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
