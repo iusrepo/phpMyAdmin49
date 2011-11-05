@@ -1,8 +1,9 @@
 %define pkgname	phpMyAdmin
+%define gettext	1
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	3.4.5
+Version:	3.4.7
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -10,11 +11,18 @@ URL:		http://www.phpmyadmin.net/
 Source0:	http://downloads.sourceforge.net/sourceforge/%{pkgname}/%{pkgname}-%{version}-all-languages.tar.bz2
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
+Patch0:		phpMyAdmin-3.4.7-gettext.patch
 %if 0%{?rhel} != 5
 Requires:	httpd, php >= 5.2.0, php-mysql >= 5.2.0, php-mcrypt >= 5.2.0
 Requires:	php-mbstring >= 5.2.0, php-gd >= 5.2.0
+%if %{gettext}
+Requires:	php-php-gettext
+%endif
 %else
 Requires:	httpd, php53, php53-mysql, php53-mcrypt, php53-mbstring, php53-gd
+%if %{gettext}
+Requires:	php53-php-gettext
+%endif
 Provides:	phpMyAdmin = %{version}-%{release}
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
@@ -49,6 +57,9 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/Chang
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{pkgname}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
+%if %{gettext}
+    -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
+%endif
     -i libraries/vendor_config.php
 
 %build
@@ -64,6 +75,10 @@ install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CIRLT]*,*txt}
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{libraries,setup/{lib,frames}}/.htaccess
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/contrib
+
+%if %{gettext}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/php-gettext/
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -81,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Sat Nov 05 2011 Robert Scheck <robert@fedoraproject.org> 3.4.7-1
+- Upgrade to 3.4.7 (#746630, #746880)
+
 * Sun Sep 18 2011 Robert Scheck <robert@fedoraproject.org> 3.4.5-1
 - Upgrade to 3.4.5 (#733638, #738681, #629214)
 
