@@ -3,7 +3,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	3.4.7
+Version:	3.4.7.1
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Sat Nov 12 2011 Robert Scheck <robert@fedoraproject.org> 3.4.7.1-1
+- Upgrade to 3.4.7.1 (#753119)
+
 * Sat Nov 05 2011 Robert Scheck <robert@fedoraproject.org> 3.4.7-1
 - Upgrade to 3.4.7 (#746630, #746880)
 
