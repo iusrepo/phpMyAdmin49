@@ -11,7 +11,6 @@ URL:		http://www.phpmyadmin.net/
 Source0:	http://downloads.sourceforge.net/sourceforge/%{pkgname}/%{pkgname}-%{version}-all-languages.tar.bz2
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
-Patch0:		phpMyAdmin-3.4.7-gettext.patch
 %if 0%{?rhel} != 5
 Requires:	httpd, php >= 5.2.0, php-mysql >= 5.2.0, php-mcrypt >= 5.2.0
 Requires:	php-mbstring >= 5.2.0, php-gd >= 5.2.0
@@ -51,7 +50,6 @@ like displaying BLOB-data as image or download-link and much more...
 
 %prep
 %setup -q -n %{pkgname}-%{version}-all-languages
-%patch0 -p1
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
