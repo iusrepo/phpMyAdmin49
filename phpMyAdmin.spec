@@ -3,8 +3,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	3.4.9
-Release:	2%{?dist}
+Version:	3.5.0
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -84,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE CREDITS TODO Documentation.txt
+%doc ChangeLog README LICENSE Documentation.txt
 %{_datadir}/%{pkgname}/
 %dir %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %{_sysconfdir}/%{pkgname}/config.inc.php
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Sun Apr 08 2012 Robert Scheck <robert@fedoraproject.org> 3.5.0-1
+- Upgrade to 3.5.0 (#790782, #795020, #809146)
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
