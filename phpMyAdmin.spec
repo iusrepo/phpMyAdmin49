@@ -4,7 +4,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	3.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Sat May 05 2012 Remi Collet <remi@fedoraproject.org> 3.5.0-2
+- make configuration compatible apache 2.2 / 2.4
+
 * Sun Apr 08 2012 Robert Scheck <robert@fedoraproject.org> 3.5.0-1
 - Upgrade to 3.5.0 (#790782, #795020, #809146)
 
