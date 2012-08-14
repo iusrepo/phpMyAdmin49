@@ -3,7 +3,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	3.5.2.1
+Version:	3.5.2.2
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Wed Aug 15 2012 Robert Scheck <robert@fedoraproject.org> 3.5.2.2-1
+- Upgrade to 3.5.2.2 (#845736)
+
 * Sat Aug 11 2012 Robert Scheck <robert@fedoraproject.org> 3.5.2.1-1
 - Upgrade to 3.5.2.1 (#845736)
 
