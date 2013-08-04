@@ -4,7 +4,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	3.5.8.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Apr 25 2013 Robert Scheck <robert@fedoraproject.org> 3.5.8.1-1
 - Upgrade to 3.5.8.1 (#956398, #956401)
 
