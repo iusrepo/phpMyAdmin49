@@ -3,8 +3,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	3.5.8.1
-Release:	2%{?dist}
+Version:	3.5.8.2
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Wed Oct 09 2013 Paul Wouters <pwouters@redhat.com> - 3.5.8.2-1
+- Upgrade to 3.5.8.2 (Various security issues)
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.8.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -331,7 +334,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Nov 20 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.2.1-1
 - Upstream released new version
 
-* Fri Oct 29 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.2-1
+* Mon Oct 29 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.2-1
 * upstream released new version
 
 * Mon Oct 22 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.1.2-1
@@ -391,7 +394,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun May 07 2006 Mike McGrath <imlinux@gmail.com> 2.8.0.3-2
 - Added mysql-php and php-mbstring as a requires
 
-* Thu Apr 07 2006 Mike McGrath <imlinux@gmail.com> 2.8.0.3-1
+* Fri Apr 07 2006 Mike McGrath <imlinux@gmail.com> 2.8.0.3-1
 - Fixed XSS vulnerability: PMASA-2006-1
 - It was possible to conduct an XSS attack with a direct call to some scripts
 - under the themes directory.
