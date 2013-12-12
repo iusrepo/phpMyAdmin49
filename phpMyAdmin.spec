@@ -1,14 +1,15 @@
 %define pkgname	phpMyAdmin
 %define gettext	1
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	3.5.8.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
-Source0:	http://downloads.sourceforge.net/sourceforge/%{pkgname}/%{pkgname}-%{version}-all-languages.tar.bz2
+Source0:	http://downloads.sourceforge.net/phpmyadmin/%{pkgname}-%{version}-all-languages.tar.xz
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
 %if 0%{?rhel} != 5
@@ -52,8 +53,8 @@ like displaying BLOB-data as image or download-link and much more...
 %setup -q -n %{pkgname}-%{version}-all-languages
 
 # Setup vendor config file
-sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_datadir}/doc/%{name}-%{version}/ChangeLog@" \
-    -e "/'LICENSE_FILE'/s@./LICENSE@%{_datadir}/doc/%{name}-%{version}/LICENSE@" \
+sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
+    -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{pkgname}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
 %if %{gettext}
@@ -95,6 +96,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
 
 %changelog
+* Thu Dec 12 2013 Ville Skyttä <ville.skytta@iki.fi> - 3.5.8.2-2
+- Fix paths to changelog and license when doc dir is unversioned (#994036).
+- Fix source URL, use xz compressed tarball.
+
 * Wed Oct 09 2013 Paul Wouters <pwouters@redhat.com> - 3.5.8.2-1
 - Upgrade to 3.5.8.2 (Various security issues)
 
