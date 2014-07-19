@@ -1,29 +1,51 @@
-%define pkgname	phpMyAdmin
-%define gettext	1
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+%define pkgname	phpMyAdmin
+
+# If php-mcrypt is available, it should be preferred. Otherwise the pure
+# phpseclib alternative alternative can be used externally or internally.
+%define mcrypt	1
+%define seclib	0
+
+# Having below mentioned separate projects externally or only internally?
+%define gettext	1
+%define tcpdf	1
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	3.5.8.2
-Release:	3%{?dist}
+Version:	4.2.6
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
 Source0:	http://downloads.sourceforge.net/phpmyadmin/%{pkgname}-%{version}-all-languages.tar.xz
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
+# Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap
 %if 0%{?rhel} != 5
-Requires:	httpd, php >= 5.2.0, php-mysql >= 5.2.0, php-mcrypt >= 5.2.0
-Requires:	php-mbstring >= 5.2.0, php-gd >= 5.2.0
-%if %{gettext}
+Requires:	php(language) >= 5.3.0, php-filter, php-xmlwriter
+%else
+Requires:	php(api) >= 20090626, php-xml >= 5.3.0
+%endif
+Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.0, php-hash, php-iconv
+Requires:	php-json, php-libxml, php-mbstring >= 5.3.0, php-mysql >= 5.3.0, php-mysqli, php-pcre
+Requires:	php-session, php-simplexml, php-spl, php-zip, php-zlib
+%if 0%{?mcrypt}
+Requires:	php-mcrypt >= 5.3.0
+%else
+%if 0%{?seclib}
+Requires:	php-phpseclib-crypt-aes
+%endif
+%endif
+%if 0%{?gettext}
 Requires:	php-php-gettext
 %endif
-%else
-Requires:	httpd, php53, php53-mysql, php53-mcrypt, php53-mbstring, php53-gd
-%if %{gettext}
-Requires:	php53-php-gettext
+# Optional runtime requirements for tcpdf: php-openssl, php-tidy (usually not required in phpMyAdmin)
+%if 0%{?tcpdf}
+Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 %endif
-Provides:	phpMyAdmin = %{version}-%{release}
+%if 0%{?rhel} == 5
+Provides:	phpMyAdmin = %{version}-%{release}, phpMyAdmin3 = %{version}-%{release}
+Obsoletes:	phpMyAdmin3 < %{version}-%{release}
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -57,8 +79,14 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{pkgname}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
-%if %{gettext}
+%if 0%{?gettext}
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
+%endif
+%if 0%{?tcpdf}
+    -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
+%endif
+%if 0%{?mcrypt}%{?seclib}
+    -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
 %endif
     -i libraries/vendor_config.php
 
@@ -66,36 +94,63 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{pkgname},%{_sysconfdir}/{httpd/conf.d,%{pkgname}}}
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}
-cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}
+mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{pkgname},%{_sysconfdir}/{httpd/conf.d,%{pkgname}}}/
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}/
+cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/
 install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
 install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
 
-rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CIRLT]*,*txt}
-rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{libraries,setup/{lib,frames}}/.htaccess
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/contrib
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CDLR]*,*.txt,config.sample.inc.php}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{doc,examples}/
+rm -f doc/html/.buildinfo
 
-%if %{gettext}
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
+ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
+mv -f config.sample.inc.php examples/
+
+# Remove bundled libraries
+%if 0%{?gettext}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/php-gettext/
 %endif
+
+%if 0%{?tcpdf}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/tcpdf/
+%endif
+
+%if 0%{?mcrypt}%{?seclib}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/phpseclib/
+%endif
+
+# Remove sources of JavaScript libraries
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/jquery/src/
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/openlayers/src/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+# Generate a secret key for this installation
+sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM/" \
+    -i %{_sysconfdir}/%{name}/config.inc.php
+
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE Documentation.txt
+%doc ChangeLog README LICENSE DCO doc/html/ examples/
 %{_datadir}/%{pkgname}/
 %dir %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %{_sysconfdir}/%{pkgname}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
 %dir %{_localstatedir}/lib/%{pkgname}/
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/save
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
+%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Sat Jul 19 2014 Robert Scheck <robert@fedoraproject.org> 4.2.6-1
+- Upgrade to 4.2.6 (#548260, #959946, #989660, #989668, #993613
+  and #1000261, #1067713, #1110877, #1117600, #1117601)
+- Switch from HTTP- to cookie-based authentication (for php-fpm)
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.8.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
