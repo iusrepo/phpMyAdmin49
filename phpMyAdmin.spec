@@ -12,7 +12,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.6
+Version:	4.2.7
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -146,6 +146,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Thu Jul 31 2014 Robert Scheck <robert@fedoraproject.org> 4.2.7-1
+- Upgrade to 4.2.7
+
 * Sat Jul 19 2014 Robert Scheck <robert@fedoraproject.org> 4.2.6-1
 - Upgrade to 4.2.6 (#548260, #959946, #989660, #989668, #993613
   and #1000261, #1067713, #1110877, #1117600, #1117601)
