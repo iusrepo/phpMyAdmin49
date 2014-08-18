@@ -12,7 +12,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.7
+Version:	4.2.7.1
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -138,14 +138,17 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %doc ChangeLog README LICENSE DCO doc/html/ examples/
 %{_datadir}/%{pkgname}/
 %dir %{_sysconfdir}/%{pkgname}/
-%config(noreplace) %{_sysconfdir}/%{pkgname}/config.inc.php
+%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
 %dir %{_localstatedir}/lib/%{pkgname}/
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
-%dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Mon Aug 18 2014 Robert Scheck <robert@fedoraproject.org> 4.2.7.1-1
+- Upgrade to 4.2.7.1 (#1130865, #1130866, #1131104)
+
 * Thu Jul 31 2014 Robert Scheck <robert@fedoraproject.org> 4.2.7-1
 - Upgrade to 4.2.7
 
