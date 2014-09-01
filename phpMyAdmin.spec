@@ -12,7 +12,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.7.1
+Version:	4.2.8
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -137,7 +137,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %defattr(-,root,root,-)
 %doc ChangeLog README LICENSE DCO doc/html/ examples/
 %{_datadir}/%{pkgname}/
-%dir %{_sysconfdir}/%{pkgname}/
+%dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
 %dir %{_localstatedir}/lib/%{pkgname}/
@@ -146,6 +146,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Mon Sep 01 2014 Robert Scheck <robert@fedoraproject.org> 4.2.8-1
+- Upgrade to 4.2.8
+
 * Mon Aug 18 2014 Robert Scheck <robert@fedoraproject.org> 4.2.7.1-1
 - Upgrade to 4.2.7.1 (#1130865, #1130866, #1131104)
 
