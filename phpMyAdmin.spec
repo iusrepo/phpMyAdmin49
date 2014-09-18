@@ -1,19 +1,19 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
-%define pkgname	phpMyAdmin
+%global pkgname	phpMyAdmin
 
 # If php-mcrypt is available, it should be preferred. Otherwise the pure
 # phpseclib alternative alternative can be used externally or internally.
-%define mcrypt	1
-%define seclib	0
+%global mcrypt	1
+%global seclib	0
 
 # Having below mentioned separate projects externally or only internally?
-%define gettext	1
-%define tcpdf	1
+%global gettext	1
+%global tcpdf	1
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.2.8.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -90,6 +90,22 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 %endif
     -i libraries/vendor_config.php
 
+# Remove bundled libraries
+%if 0%{?gettext}
+rm -rf libraries/php-gettext/
+%endif
+
+%if 0%{?tcpdf}
+rm -rf libraries/tcpdf/
+%endif
+
+%if 0%{?mcrypt}%{?seclib}
+rm -rf libraries/phpseclib/
+%endif
+
+# Remove sources of JavaScript libraries
+rm -rf js/jquery/src/ js/openlayers/src/
+
 %build
 
 %install
@@ -107,23 +123,6 @@ rm -f doc/html/.buildinfo
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
 mv -f config.sample.inc.php examples/
-
-# Remove bundled libraries
-%if 0%{?gettext}
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/php-gettext/
-%endif
-
-%if 0%{?tcpdf}
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/tcpdf/
-%endif
-
-%if 0%{?mcrypt}%{?seclib}
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/phpseclib/
-%endif
-
-# Remove sources of JavaScript libraries
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/jquery/src/
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/openlayers/src/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -146,6 +145,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Wed Sep 17 2014 Robert Scheck <robert@fedoraproject.org> 4.2.8.1-2
+- Move rm(1) calls from %%install to %%prep (#1121355 #c10)
+
 * Tue Sep 16 2014 Robert Scheck <robert@fedoraproject.org> 4.2.8.1-1
 - Upgrade to 4.2.8.1 (#1141635)
 
