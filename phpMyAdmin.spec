@@ -147,6 +147,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %changelog
 * Sun Sep 21 2014 Robert Scheck <robert@fedoraproject.org> 4.2.9-1
 - Upgrade to 4.2.9
+- Set default charset for Apache explicitly
 
 * Wed Sep 17 2014 Robert Scheck <robert@fedoraproject.org> 4.2.8.1-2
 - Move rm(1) calls from %%install to %%prep (#1121355 #c10)
