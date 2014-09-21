@@ -12,8 +12,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.8.1
-Release:	2%{?dist}
+Version:	4.2.9
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
@@ -145,6 +145,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Sun Sep 21 2014 Robert Scheck <robert@fedoraproject.org> 4.2.9-1
+- Upgrade to 4.2.9
+
 * Wed Sep 17 2014 Robert Scheck <robert@fedoraproject.org> 4.2.8.1-2
 - Move rm(1) calls from %%install to %%prep (#1121355 #c10)
 
