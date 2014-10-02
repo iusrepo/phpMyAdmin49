@@ -12,7 +12,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.9
+Version:	4.2.9.1
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
@@ -145,6 +145,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Thu Oct 02 2014 Robert Scheck <robert@fedoraproject.org> 4.2.9.1-1
+- Upgrade to 4.2.9.1 (#1148664)
+
 * Sun Sep 21 2014 Robert Scheck <robert@fedoraproject.org> 4.2.9-1
 - Upgrade to 4.2.9
 - Set default charset for Apache explicitly
