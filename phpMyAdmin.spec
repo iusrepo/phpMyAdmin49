@@ -10,21 +10,39 @@
 %global gettext	1
 %global tcpdf	1
 
+%if 0%{?fedora} >= 21
+# nginx 1.6 with nginx-filesystem
+%global with_nginx     1
+# httpd 2.4 with httpd-filesystem
+%global with_httpd     1
+%else
+%global with_nginx     0
+%global with_httpd     0
+%endif
+
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.2.9.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
 Source0:	http://downloads.sourceforge.net/phpmyadmin/%{pkgname}-%{version}-all-languages.tar.xz
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
+Source3:	phpMyAdmin.nginx
 # Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap
 %if 0%{?rhel} != 5
 Requires:	php(language) >= 5.3.0, php-filter, php-xmlwriter
 %else
 Requires:	php(api) >= 20090626, php-xml >= 5.3.0
+%endif
+%if %{with_nginx}
+Requires:	nginx-filesystem
+%endif
+%if %{with_httpd}
+Requires:	httpd-filesystem
+Requires:	php(httpd)
 %endif
 Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.0, php-hash, php-iconv
 Requires:	php-json, php-libxml, php-mbstring >= 5.3.0, php-mysql >= 5.3.0, php-mysqli, php-pcre
@@ -110,11 +128,14 @@ rm -rf js/jquery/src/ js/openlayers/src/
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{%{_datadir}/%{pkgname},%{_sysconfdir}/{httpd/conf.d,%{pkgname}}}/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}/
 cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/
-install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
-install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
+install -Dpm 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
+install -Dpm 0640 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
+%if %{with_nginx}
+install -Dpm 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{pkgname}.conf
+%endif
 
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CDLR]*,*.txt,config.sample.inc.php}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{doc,examples}/
@@ -139,12 +160,18 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
+%if %{with_nginx}
+%config(noreplace) %{_sysconfdir}/nginx/default.d/%{pkgname}.conf
+%endif
 %dir %{_localstatedir}/lib/%{pkgname}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Sat Oct  4 2014 Remi Collet <remi@fedoraproject.org> 4.2.9.1-2
+- provide nginx configuration (Fedora >= 21)
+
 * Thu Oct 02 2014 Robert Scheck <robert@fedoraproject.org> 4.2.9.1-1
 - Upgrade to 4.2.9.1 (#1148664)
 
