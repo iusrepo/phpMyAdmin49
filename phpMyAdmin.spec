@@ -106,6 +106,9 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 %if 0%{?mcrypt}%{?seclib}
     -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
 %endif
+%if 0%{?_licensedir:1}
+    -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
+%endif
     -i libraries/vendor_config.php
 
 # Remove bundled libraries
@@ -145,6 +148,14 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
 mv -f config.sample.inc.php examples/
 
+mv js/jquery/MIT-LICENSE.txt   LICENSE-jquery
+mv js/canvg/MIT-LICENSE.txt    LICENSE-canvg
+mv js/codemirror/LICENSE       LICENSE-codemirror
+%if ! 0%{?tcpdf}
+mv libraries/tcpdf/LICENSE.TXT LICENSE-tcpdf
+%endif
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -155,7 +166,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README LICENSE DCO doc/html/ examples/
+%{!?_licensedir:%global license %%doc}
+%license LICENSE*
+%doc ChangeLog README DCO doc/html/ examples/
 %{_datadir}/%{pkgname}/
 %dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
@@ -171,6 +184,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %changelog
 * Sat Oct  4 2014 Remi Collet <remi@fedoraproject.org> 4.2.9.1-2
 - provide nginx configuration (Fedora >= 21)
+- fix license handling
 
 * Thu Oct 02 2014 Robert Scheck <robert@fedoraproject.org> 4.2.9.1-1
 - Upgrade to 4.2.9.1 (#1148664)
