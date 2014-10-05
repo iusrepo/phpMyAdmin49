@@ -24,7 +24,8 @@ Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.2.9.1
 Release:	2%{?dist}
-License:	GPLv2+
+# MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
+License:	GPLv2+ and MIT
 Group:		Applications/Internet
 URL:		http://www.phpmyadmin.net/
 Source0:	http://downloads.sourceforge.net/phpmyadmin/%{pkgname}-%{version}-all-languages.tar.xz
