@@ -22,8 +22,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.9.1
-Release:	2%{?dist}
+Version:	4.2.10
+Release:	1%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
 Group:		Applications/Internet
@@ -183,6 +183,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Mon Oct 13 2014 Robert Scheck <robert@fedoraproject.org> 4.2.10-1
+- Upgrade to 4.2.10 (#1152115)
+
 * Sat Oct  4 2014 Remi Collet <remi@fedoraproject.org> 4.2.9.1-2
 - provide nginx configuration (Fedora >= 21)
 - fix license handling
