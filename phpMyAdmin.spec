@@ -1,11 +1,6 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global pkgname	phpMyAdmin
 
-# If php-mcrypt is available, it should be preferred. Otherwise the pure
-# phpseclib alternative alternative can be used externally or internally.
-%global mcrypt	1
-%global seclib	0
-
 # Having below mentioned separate projects externally or only internally?
 %global gettext	1
 %global tcpdf	1
@@ -22,7 +17,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.2.13.1
+Version:	4.3.1
 Release:	1%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
@@ -32,7 +27,8 @@ Source0:	http://downloads.sourceforge.net/phpmyadmin/%{pkgname}-%{version}-all-l
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
 Source3:	phpMyAdmin.nginx
-# Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap
+# Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap,
+# php-mcrypt, php-phpseclib-crypt-aes, php-phpseclib-crypt-random
 %if 0%{?rhel} != 5
 Requires:	php(language) >= 5.3.0, php-filter, php-xmlwriter
 %else
@@ -46,15 +42,8 @@ Requires:	httpd-filesystem
 Requires:	php(httpd)
 %endif
 Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.0, php-hash, php-iconv
-Requires:	php-json, php-libxml, php-mbstring >= 5.3.0, php-mysql >= 5.3.0, php-mysqli, php-pcre
-Requires:	php-session, php-simplexml, php-spl, php-zip, php-zlib
-%if 0%{?mcrypt}
-Requires:	php-mcrypt >= 5.3.0
-%else
-%if 0%{?seclib}
-Requires:	php-phpseclib-crypt-aes
-%endif
-%endif
+Requires:	php-json, php-libxml, php-mbstring >= 5.3.0, php-mysql >= 5.3.0, php-mysqli, php-openssl
+Requires:	php-pcre, php-session, php-simplexml, php-spl, php-zip, php-zlib
 %if 0%{?gettext}
 Requires:	php-php-gettext
 %endif
@@ -104,9 +93,7 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 %if 0%{?tcpdf}
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
 %endif
-%if 0%{?mcrypt}%{?seclib}
     -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
-%endif
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
@@ -121,9 +108,7 @@ rm -rf libraries/php-gettext/
 rm -rf libraries/tcpdf/
 %endif
 
-%if 0%{?mcrypt}%{?seclib}
 rm -rf libraries/phpseclib/
-%endif
 
 # Remove sources of JavaScript libraries
 rm -rf js/jquery/src/ js/openlayers/src/
@@ -142,12 +127,11 @@ install -Dpm 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{pkg
 %endif
 
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CDLR]*,*.txt,config.sample.inc.php}
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{doc,examples}/
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 rm -f doc/html/.buildinfo
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
-mv -f config.sample.inc.php examples/
 
 mv js/jquery/MIT-LICENSE.txt   LICENSE-jquery
 mv js/canvg/MIT-LICENSE.txt    LICENSE-canvg
@@ -155,7 +139,6 @@ mv js/codemirror/LICENSE       LICENSE-codemirror
 %if ! 0%{?tcpdf}
 mv libraries/tcpdf/LICENSE.TXT LICENSE-tcpdf
 %endif
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -169,7 +152,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
-%doc ChangeLog README DCO doc/html/ examples/
+%doc ChangeLog README DCO doc/html/ config.sample.inc.php
 %{_datadir}/%{pkgname}/
 %dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
@@ -183,6 +166,12 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Tue Dec 09 2014 Robert Scheck <robert@fedoraproject.org> 4.3.1-1
+- Upgrade to 4.3.1
+
+* Sat Dec 06 2014 Robert Scheck <robert@fedoraproject.org> 4.3.0-1
+- Upgrade to 4.3.0 (thanks to Remi Collet)
+
 * Thu Dec 04 2014 Robert Scheck <robert@fedoraproject.org> 4.2.13.1-1
 - Upgrade to 4.2.13.1
 
