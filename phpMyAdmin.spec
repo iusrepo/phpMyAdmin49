@@ -18,7 +18,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
 Group:		Applications/Internet
@@ -146,7 +146,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 # Generate a secret key for this installation
 sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM/" \
-    -i %{_sysconfdir}/%{name}/config.inc.php
+    -i %{_sysconfdir}/%{pkgname}/config.inc.php
 
 %files
 %defattr(-,root,root,-)
@@ -166,6 +166,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Thu Dec 11 2014 Robert Scheck <robert@fedoraproject.org> 4.3.1-2
+- Use %%{pkgname} rather %%{name} in %%post scriptlet (#1173189)
+
 * Tue Dec 09 2014 Robert Scheck <robert@fedoraproject.org> 4.3.1-1
 - Upgrade to 4.3.1
 
