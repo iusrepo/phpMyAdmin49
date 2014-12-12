@@ -17,8 +17,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.3.1
-Release:	2%{?dist}
+Version:	4.3.2
+Release:	1%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
 Group:		Applications/Internet
@@ -166,6 +166,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Fri Dec 12 2014 Robert Scheck <robert@fedoraproject.org> 4.3.2-1
+- Upgrade to 4.3.2
+
 * Thu Dec 11 2014 Robert Scheck <robert@fedoraproject.org> 4.3.1-2
 - Use %%{pkgname} rather %%{name} in %%post scriptlet (#1173189)
 
