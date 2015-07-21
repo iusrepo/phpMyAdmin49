@@ -17,15 +17,15 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.4.11
+Version:	4.4.12
 Release:	1%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/, libraries/sql-formatter/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
 License:	GPLv2+ and MIT and BSD
 Group:		Applications/Internet
-URL:		http://www.phpmyadmin.net/
-Source0:	http://downloads.sourceforge.net/phpmyadmin/%{pkgname}-%{version}-all-languages.tar.xz
+URL:		https://www.phpmyadmin.net/
+Source0:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
 Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
 Source3:	phpMyAdmin.nginx
@@ -42,6 +42,7 @@ Requires:	nginx-filesystem
 %if %{with_httpd}
 Requires:	httpd-filesystem
 Requires:	php(httpd)
+Suggests:	httpd
 %endif
 Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.0, php-iconv
 Requires:	php-json, php-libxml, php-mbstring >= 5.3.0, php-mysql >= 5.3.0, php-mysqli
@@ -173,6 +174,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Thu Jul 21 2015 Robert Scheck <robert@fedoraproject.org> 4.4.12-1
+- Upgrade to 4.4.12 (thanks to Remi Collet)
+
 * Mon Jul 06 2015 Robert Scheck <robert@fedoraproject.org> 4.4.11-1
 - Upgrade to 4.4.11
 
