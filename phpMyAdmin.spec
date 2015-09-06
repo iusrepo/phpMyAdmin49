@@ -30,7 +30,7 @@ Source1:	phpMyAdmin-config.inc.php
 Source2:	phpMyAdmin.htaccess
 Source3:	phpMyAdmin.nginx
 # Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap,
-# php-mcrypt, php-phpseclib-crypt-aes, php-phpseclib-crypt-random
+# php-mcrypt, php-phpseclib-crypt-aes >= 2.0.0, php-phpseclib-crypt-random >= 2.0.0
 %if 0%{?rhel} != 5
 Requires:	php(language) >= 5.3.0, php-filter, php-xmlwriter
 %else
