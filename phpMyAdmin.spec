@@ -17,7 +17,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.4.14
+Version:	4.4.14.1
 Release:	1%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/, libraries/sql-formatter/),
 # BSD (libraries/plugins/auth/recaptcha/),
@@ -26,16 +26,13 @@ License:	GPLv2+ and MIT and BSD
 Group:		Applications/Internet
 URL:		https://www.phpmyadmin.net/
 Source0:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
-Source1:	phpMyAdmin-config.inc.php
-Source2:	phpMyAdmin.htaccess
-Source3:	phpMyAdmin.nginx
+Source1:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz.asc
+Source2:	phpMyAdmin-config.inc.php
+Source3:	phpMyAdmin.htaccess
+Source4:	phpMyAdmin.nginx
 # Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap,
 # php-mcrypt, php-phpseclib-crypt-aes >= 2.0.0, php-phpseclib-crypt-random >= 2.0.0
-%if 0%{?rhel} != 5
-Requires:	php(language) >= 5.3.0, php-filter, php-xmlwriter
-%else
-Requires:	php(api) >= 20090626, php-xml >= 5.3.0
-%endif
+Requires:	php(language) >= 5.3.7, php-filter, php-xmlwriter
 %if %{with_nginx}
 Requires:	nginx-filesystem
 %endif
@@ -44,9 +41,9 @@ Requires:	httpd-filesystem
 Requires:	php(httpd)
 Suggests:	httpd
 %endif
-Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.0, php-iconv
-Requires:	php-json, php-libxml, php-mbstring >= 5.3.0, php-mysql >= 5.3.0, php-mysqli
-Requires:	php-openssl, php-pcre, php-session, php-simplexml, php-spl, php-zip, php-zlib
+Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.7, php-iconv
+Requires:	php-json, php-libxml, php-mbstring >= 5.3.7, php-mysqli >= 5.3.7, php-openssl
+Requires:	php-pcre, php-session, php-simplexml, php-spl, php-zip, php-zlib
 %if 0%{?gettext}
 Requires:	php-php-gettext
 %endif
@@ -54,11 +51,7 @@ Requires:	php-php-gettext
 %if 0%{?tcpdf}
 Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 %else
-Requires:	php-hash, php-xml >= 5.3.0
-%endif
-%if 0%{?rhel} == 5
-Provides:	phpMyAdmin = %{version}-%{release}, phpMyAdmin3 = %{version}-%{release}
-Obsoletes:	phpMyAdmin3 < %{version}-%{release}
+Requires:	php-hash, php-xml >= 5.3.7
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -125,10 +118,10 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}/
 cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/
-install -Dpm 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
-install -Dpm 0640 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
+install -Dpm 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
+install -Dpm 0640 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
 %if %{with_nginx}
-install -Dpm 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{pkgname}.conf
+install -Dpm 0644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{pkgname}.conf
 %endif
 
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CDLR]*,*.txt,config.sample.inc.php}
@@ -174,6 +167,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Tue Sep 08 2015 Robert Scheck <robert@fedoraproject.org> 4.4.14.1-1
+- Upgrade to 4.4.14.1
+
 * Thu Aug 20 2015 Robert Scheck <robert@fedoraproject.org> 4.4.14-1
 - Upgrade to 4.4.14
 
