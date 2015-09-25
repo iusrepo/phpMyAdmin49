@@ -2,8 +2,9 @@
 %global pkgname	phpMyAdmin
 
 # Having below mentioned separate projects externally or only internally?
-%global gettext	1
-%global tcpdf	1
+%global gettext   1
+%global tcpdf     1
+%global sqlparser 1
 
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -17,9 +18,9 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.4.15
+Version:	4.5.0
 Release:	1%{?dist}
-# MIT (js/jquery/, js/canvg/, js/codemirror/, libraries/sql-formatter/),
+# MIT (js/jquery/, js/canvg/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
 License:	GPLv2+ and MIT and BSD
@@ -32,7 +33,7 @@ Source3:	phpMyAdmin.htaccess
 Source4:	phpMyAdmin.nginx
 # Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap,
 # php-mcrypt, php-phpseclib-crypt-aes >= 2.0.0, php-phpseclib-crypt-random >= 2.0.0
-Requires:	php(language) >= 5.3.7, php-filter, php-xmlwriter
+Requires:	php(language) >= 5.5, php-filter, php-xmlwriter
 %if %{with_nginx}
 Requires:	nginx-filesystem
 %endif
@@ -41,8 +42,8 @@ Requires:	httpd-filesystem
 Requires:	php(httpd)
 Suggests:	httpd
 %endif
-Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.3.7, php-iconv
-Requires:	php-json, php-libxml, php-mbstring >= 5.3.7, php-mysqli >= 5.3.7, php-openssl
+Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.5, php-iconv
+Requires:	php-json, php-libxml, php-mbstring >= 5.5, php-mysqli >= 5.5, php-openssl
 Requires:	php-pcre, php-session, php-simplexml, php-spl, php-zip, php-zlib
 %if 0%{?gettext}
 Requires:	php-php-gettext
@@ -51,7 +52,10 @@ Requires:	php-php-gettext
 %if 0%{?tcpdf}
 Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 %else
-Requires:	php-hash, php-xml >= 5.3.7
+Requires:	php-hash, php-xml >= 5.5
+%endif
+%if 0%{?sqlparser}
+Requires:	php-udan11-sql-parser
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -83,7 +87,7 @@ like displaying BLOB-data as image or download-link and much more...
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
-    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{pkgname}/'@" \
+    -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
 %if 0%{?gettext}
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
@@ -92,6 +96,9 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
 %endif
     -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
+%if 0%{?sqlparser}
+    -e "/'SQL_PARSER_AUTOLOAD'/s@./libraries/sql-parser@%{_datadir}/php/SqlParser@" \
+%endif
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
@@ -107,6 +114,10 @@ rm -rf libraries/tcpdf/
 %endif
 
 rm -rf libraries/phpseclib/
+
+%if 0%{?sqlparser}
+rm -rf libraries/sql-parser/
+%endif
 
 # Remove sources of JavaScript libraries
 rm -rf js/jquery/src/ js/openlayers/src/
@@ -136,7 +147,6 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/jquery/MIT-LICENSE.txt LICENSE-jq
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/canvg/MIT-LICENSE.txt LICENSE-canvg
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/codemirror/LICENSE LICENSE-codemirror
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/sql-formatter/LICENSE.txt LICENSE-sql-formatter
 %if ! 0%{?tcpdf}
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/tcpdf/LICENSE.TXT LICENSE-tcpdf
 %endif
@@ -167,6 +177,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Wed Sep 23 2015 Robert Scheck <robert@fedoraproject.org> 4.5.0-1
+- Upgrade to 4.5.0 (#1265647)
+
 * Sun Sep 20 2015 Robert Scheck <robert@fedoraproject.org> 4.4.15-1
 - Upgrade to 4.4.15
 
