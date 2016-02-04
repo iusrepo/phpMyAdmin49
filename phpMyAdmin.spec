@@ -19,7 +19,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.5.4.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
@@ -177,6 +177,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 4.5.4.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Sat Jan 30 2016 Robert Scheck <robert@fedoraproject.org> 4.5.4.1-1
 - Upgrade to 4.5.4.1
 
