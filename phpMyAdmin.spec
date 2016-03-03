@@ -18,7 +18,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.5.4.1
+Version:	4.5.5.1
 Release:	1%{?dist}
 # MIT (js/jquery/, js/canvg/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
@@ -55,7 +55,7 @@ Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 Requires:	php-hash, php-xml >= 5.5
 %endif
 %if 0%{?sqlparser}
-Requires:	php-composer(udan11/sql-parser) >= 3.0.3
+Requires:	php-composer(udan11/sql-parser) >= 3.4.0
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -122,6 +122,9 @@ rm -rf libraries/sql-parser/
 # Remove sources of JavaScript libraries
 rm -rf js/jquery/src/ js/openlayers/src/
 
+# Remove upstream test suite
+rm -rf test build.xml phpunit.xml.dist
+
 %build
 
 %install
@@ -177,6 +180,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Thu Mar 03 2016 Robert Scheck <robert@fedoraproject.org> 4.5.5.1-1
+- Upgrade to 4.5.5.1 (#1310918, #1313225, #1313698, Remi Collet)
+
 * Sat Jan 30 2016 Robert Scheck <robert@fedoraproject.org> 4.5.4.1-1
 - Upgrade to 4.5.4.1
 
