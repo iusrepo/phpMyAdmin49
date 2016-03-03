@@ -181,7 +181,8 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 
 %changelog
 * Thu Mar 03 2016 Robert Scheck <robert@fedoraproject.org> 4.5.5.1-1
-- Upgrade to 4.5.5.1 (#1310918, #1313225, #1313698, Remi Collet)
+- Upgrade to 4.5.5.1 (#1310918, #1313221, #1313224, #1313695,
+  #1313696, thanks to Remi Collet)
 
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 4.5.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
