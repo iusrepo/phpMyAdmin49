@@ -18,9 +18,9 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.5.5.1
+Version:	4.6.0
 Release:	1%{?dist}
-# MIT (js/jquery/, js/canvg/, js/codemirror/),
+# MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
 License:	GPLv2+ and MIT and BSD
@@ -147,7 +147,6 @@ ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/h
 mv -f config.sample.inc.php examples/
 
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/canvg/MIT-LICENSE.txt LICENSE-canvg
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/codemirror/LICENSE LICENSE-codemirror
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
 %if ! 0%{?tcpdf}
@@ -180,6 +179,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Tue Mar 22 2016 Remi Collet <remi@remirepo.net> 4.6.0-1
+- update to 4.6.0 (2016-03-22, features release)
+
 * Thu Mar 03 2016 Robert Scheck <robert@fedoraproject.org> 4.5.5.1-1
 - Upgrade to 4.5.5.1 (#1310918, #1313221, #1313224, #1313695,
   #1313696, thanks to Remi Collet)
