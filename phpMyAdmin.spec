@@ -19,7 +19,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.6.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
@@ -55,7 +55,7 @@ Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 Requires:	php-hash, php-xml >= 5.5
 %endif
 %if 0%{?sqlparser}
-Requires:	php-composer(udan11/sql-parser) >= 3.4.0
+Requires:	php-composer(phpmyadmin/sql-parser) >= 3.4.4
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -179,6 +179,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Tue Jul 26 2016 Remi Collet <remi@remirepo.net> 4.6.4-1
+- bump dependency on sql-parser 3.4.4
+
 * Thu Jun 23 2016 Robert Scheck <robert@fedoraproject.org> 4.6.3-1
 - Upgrade to 4.6.3 (#1349500)
 
