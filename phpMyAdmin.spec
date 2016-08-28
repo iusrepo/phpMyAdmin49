@@ -19,7 +19,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.6.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
@@ -158,7 +158,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 # Generate a secret key for this installation
-sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM/" \
+sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)/" \
     -i %{_sysconfdir}/%{pkgname}/config.inc.php
 
 %files
@@ -179,6 +179,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Sun Aug 28 2016 Robert Scheck <robert@fedoraproject.org> 4.6.4-2
+- Use 'blowfish_secret' with 32 characters for new installation
+
 * Sun Aug 28 2016 Robert Scheck <robert@fedoraproject.org> 4.6.4-1
 - Upgrade to 4.6.4 (#1370778)
 
