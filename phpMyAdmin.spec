@@ -18,8 +18,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.6.4
-Release:	2%{?dist}
+Version:	4.6.5
+Release:	1%{?dist}
 # MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
@@ -55,7 +55,7 @@ Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 Requires:	php-hash, php-xml >= 5.5
 %endif
 %if 0%{?sqlparser}
-Requires:	php-composer(phpmyadmin/sql-parser) >= 3.4.4
+Requires:	php-composer(phpmyadmin/sql-parser) >= 3.4.13
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -179,6 +179,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> 4.6.5-1
+- update to 4.6.5 (2016-11-25, security and bug fixes)
+- bump dependency on sql-parser 3.4.13
+
 * Sun Aug 28 2016 Robert Scheck <robert@fedoraproject.org> 4.6.4-2
 - Use 'blowfish_secret' with 32 characters for new installation
 
