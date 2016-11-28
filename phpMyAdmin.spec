@@ -19,7 +19,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.6.5.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
@@ -31,8 +31,6 @@ Source1:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-
 Source2:	phpMyAdmin-config.inc.php
 Source3:	phpMyAdmin.htaccess
 Source4:	phpMyAdmin.nginx
-
-Patch0:		%{name}-pr12741.patch
 
 # Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap,
 # php-mcrypt, php-phpseclib-crypt-aes >= 2.0.0, php-phpseclib-crypt-random >= 2.0.0
@@ -86,8 +84,6 @@ like displaying BLOB-data as image or download-link and much more...
 
 %prep
 %setup -q -n %{pkgname}-%{version}-all-languages
-
-%patch0 -p1
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
@@ -184,10 +180,8 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
-* Sat Nov 26 2016 Remi Collet <remi@remirepo.net> 4.6.5.1-1
+* Sat Nov 26 2016 Remi Collet <remi@remirepo.net> 4.6.5.1-2
 - update to 4.6.5.1 (2016-11-26, bug fixes)
-- add patch to fix broken links on home page,
-  open https://github.com/phpmyadmin/phpmyadmin/pull/12741
 
 * Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> 4.6.5-1
 - update to 4.6.5 (2016-11-25, security and bug fixes)
