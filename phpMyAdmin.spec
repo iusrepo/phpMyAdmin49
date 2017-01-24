@@ -18,8 +18,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.6.5.1
-Release:	2%{?dist}
+Version:	4.6.6
+Release:	1%{?dist}
 # MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
@@ -56,7 +56,8 @@ Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
 Requires:	php-hash, php-xml >= 5.5
 %endif
 %if 0%{?sqlparser}
-Requires:	php-composer(phpmyadmin/sql-parser) >= 3.4.13
+Requires:	php-composer(phpmyadmin/sql-parser) <  4
+Requires:	php-composer(phpmyadmin/sql-parser) >= 3.4.17
 %endif
 Provides:	phpmyadmin = %{version}-%{release}
 BuildArch:	noarch
@@ -180,6 +181,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> 4.6.6-1
+- update to 4.6.6 (2017-01-23, bug and security fixes)
+- ensure phpmyadmin/sql-parser v3 is used
+
 * Sat Nov 26 2016 Remi Collet <remi@remirepo.net> 4.6.5.1-2
 - update to 4.6.5.1 (2016-11-26, bug fixes)
 
