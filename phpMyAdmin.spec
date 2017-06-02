@@ -1,29 +1,13 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global pkgname	phpMyAdmin
 
-# Having below mentioned separate projects externally or only internally?
-%global gettext   1
-%global tcpdf     1
-%global sqlparser 1
-
-%if 0%{?fedora} >= 21
-# nginx 1.6 with nginx-filesystem
-%global with_nginx     1
-# httpd 2.4 with httpd-filesystem
-%global with_httpd     1
-%else
-%global with_nginx     0
-%global with_httpd     0
-%endif
-
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.6.6
-Release:	2%{?dist}
+Version:	4.7.1
+Release:	1%{?dist}
 # MIT (js/jquery/, js/codemirror/),
-# BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
-License:	GPLv2+ and MIT and BSD
+License:	GPLv2+ and MIT
 Group:		Applications/Internet
 URL:		https://www.phpmyadmin.net/
 Source0:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
@@ -32,36 +16,78 @@ Source2:	phpMyAdmin-config.inc.php
 Source3:	phpMyAdmin.htaccess
 Source4:	phpMyAdmin.nginx
 
-# Optional (and partially redundant) runtime requirements: php-bcmath, php-gmp, php-recode, php-soap,
-# php-mcrypt, php-phpseclib-crypt-aes >= 2.0.0, php-phpseclib-crypt-random >= 2.0.0
-Requires:	php(language) >= 5.5, php-filter, php-xmlwriter
-%if %{with_nginx}
+BuildArch:	noarch
+
 Requires:	nginx-filesystem
-%endif
-%if %{with_httpd}
 Requires:	httpd-filesystem
 Requires:	php(httpd)
 Suggests:	httpd
-%endif
-Requires:	webserver, php-bz2, php-ctype, php-curl, php-date, php-gd >= 5.5, php-iconv
-Requires:	php-json, php-libxml, php-mbstring >= 5.5, php-mysqli >= 5.5, php-openssl
-Requires:	php-pcre, php-session, php-simplexml, php-spl, php-zip, php-zlib
-%if 0%{?gettext}
-Requires:	php-php-gettext
-%endif
-# Optional runtime requirements for tcpdf: php-openssl, php-tidy (usually not required in phpMyAdmin)
-%if 0%{?tcpdf}
-Requires:	php-tcpdf, php-tcpdf-dejavu-sans-fonts
-%else
-Requires:	php-hash, php-xml >= 5.5
-%endif
-%if 0%{?sqlparser}
-Requires:	php-composer(phpmyadmin/sql-parser) <  4
-Requires:	php-composer(phpmyadmin/sql-parser) >= 3.4.17
-%endif
-Provides:	phpmyadmin = %{version}-%{release}
-BuildArch:	noarch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+# From composer.json, "require": {
+#        "php": ">=5.5.0",
+#        "ext-mbstring": "*",
+#        "ext-mysqli": "*",
+#        "ext-xml": "*",
+#        "ext-pcre": "*",
+#        "ext-json": "*",
+#        "phpmyadmin/sql-parser": "^4.1.2",
+#        "phpmyadmin/motranslator": "^3.0",
+#        "phpmyadmin/shapefile": "^2.0",
+#        "tecnickcom/tcpdf": "^6.2",
+#        "phpseclib/phpseclib": "^2.0",
+#        "google/recaptcha": "^1.1"
+Requires:  php(language) >= 5.5
+Requires:  php-mbstring
+Requires:  php-mysqli
+Requires:  php-openssl
+Requires:  php-xml
+Requires:  php-pcre
+Requires:  php-json
+Requires:  php-composer(phpmyadmin/sql-parser)   <  5
+Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1.2
+Requires:  php-composer(phpmyadmin/motranslator) <  4
+Requires:  php-composer(phpmyadmin/motranslator) >= 3.0
+Requires:  php-composer(phpmyadmin/shapefile)    <  3
+Requires:  php-composer(phpmyadmin/shapefile)    >= 2.0
+Requires:  php-composer(tecnickcom/tcpdf)        <  7
+Requires:  php-composer(tecnickcom/tcpdf)        >= 6.2
+Requires:  php-tcpdf-dejavu-sans-fonts
+Requires:  php-composer(phpseclib/phpseclib)     <  3
+Requires:  php-composer(phpseclib/phpseclib)     >= 2.0
+Requires:  php-composer(google/recaptcha)        <  2
+Requires:  php-composer(google/recaptcha)        >= 1.1
+# Autoloader
+Requires:  php-composer(fedora/autoloader)
+# From composer.json, "suggest": {
+#        "ext-openssl": "Cookie encryption",
+#        "ext-curl": "Updates checking",
+#        "ext-opcache": "Better performance",
+#        "ext-zlib": "For gz import and export",
+#        "ext-bz2": "For bzip2 import and export",
+#        "ext-zip": "For zip import and export",
+#        "ext-gd2": "For image transformations",
+#        "tecnickcom/tcpdf": "For PDF support"
+Requires:  php-openssl
+Requires:  php-curl
+Requires:  php-zlib
+Requires:  php-bz2
+Requires:  php-zip
+Requires:  php-gd
+Recommends: php-opcache
+# From phpcompatinfo reports for 4.7.0
+Requires:  php-date
+Requires:  php-filter
+Requires:  php-hash
+Requires:  php-iconv
+Requires:  php-libxml
+Requires:  php-recode
+Requires:  php-session
+Requires:  php-simplexml
+Requires:  php-spl
+Requires:  php-xmlwriter
+
+Provides:  phpmyadmin = %{version}-%{release}
+
 
 %description
 phpMyAdmin is a tool written in PHP intended to handle the administration of
@@ -91,58 +117,45 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
-%if 0%{?gettext}
-    -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
-%endif
-%if 0%{?tcpdf}
-    -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
-%endif
-    -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
-%if 0%{?sqlparser}
-    -e "/'SQL_PARSER_AUTOLOAD'/s@./libraries/sql-parser@%{_datadir}/php/SqlParser@" \
-%endif
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
     -i libraries/vendor_config.php
 
-# Remove bundled libraries
-%if 0%{?gettext}
-rm -rf libraries/php-gettext/
-%endif
+# Generate autoloader
+rm -rf vendor/*
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+/* Autoloader for phpMyAdmin and its dependencies */
 
-%if 0%{?tcpdf}
-rm -rf libraries/tcpdf/
-%endif
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('PMA\\', dirname(__DIR__));
+\Fedora\Autoloader\Dependencies::required([
+    '%{_datadir}/php/PhpMyAdmin/SqlParser/autoload.php',
+    '%{_datadir}/php/PhpMyAdmin/MoTranslator/autoload.php',
+    '%{_datadir}/php/PhpMyAdmin/ShapeFile/autoload.php',
+    '%{_datadir}/php/tcpdf/autoload.php',
+    '%{_datadir}/php/phpseclib/autoload.php',
+    '%{_datadir}/php/ReCaptcha/autoload.php',
+]);
+EOF
 
-rm -rf libraries/phpseclib/
-
-%if 0%{?sqlparser}
-rm -rf libraries/sql-parser/
-%endif
-
-# Remove sources of JavaScript libraries
-rm -rf js/jquery/src/ js/openlayers/src/
-
-# Remove upstream test suite
-rm -rf test build.xml phpunit.xml.dist
 
 %build
 
+
 %install
-rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}/
 cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/
 install -Dpm 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
 install -Dpm 0640 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
-%if %{with_nginx}
 install -Dpm 0644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{pkgname}.conf
-%endif
 
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CDLR]*,*.txt,config.sample.inc.php}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{doc,examples}/
 rm -f doc/html/.buildinfo
+rm $RPM_BUILD_ROOT/%{_datadir}/%{name}/composer.*
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
@@ -150,37 +163,39 @@ mv -f config.sample.inc.php examples/
 
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/codemirror/LICENSE LICENSE-codemirror
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
-%if ! 0%{?tcpdf}
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/libraries/tcpdf/LICENSE.TXT LICENSE-tcpdf
-%endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 # Generate a secret key for this installation
 sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)/" \
     -i %{_sysconfdir}/%{pkgname}/config.inc.php
 
+
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
 %doc ChangeLog README DCO doc/html/ examples/
+%doc composer.json
 %{_datadir}/%{pkgname}/
 %dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
-%if %{with_nginx}
 %config(noreplace) %{_sysconfdir}/nginx/default.d/%{pkgname}.conf
-%endif
 %dir %{_localstatedir}/lib/%{pkgname}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
 
+
 %changelog
+* Fri Jun  2 2017 Remi Collet <remi@remirepo.net> 4.7.1-1
+- update to 4.7.1
+- raise dependency on phpmyadmin/sql-parser version 4.1.2
+- add dependency on phpmyadmin/motranslator
+- add dependency on phpmyadmin/shapefile
+- add dependency on google/recaptcha
+- use fedora autoloader instead of composer one
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.6.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
@@ -241,7 +256,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 * Sun Oct 25 2015 Robert Scheck <robert@fedoraproject.org> 4.5.1-1
 - Upgrade to 4.5.1 (#1274938)
 
-* Sun Sep 25 2015 Robert Scheck <robert@fedoraproject.org> 4.5.0.2-1
+* Fri Sep 25 2015 Robert Scheck <robert@fedoraproject.org> 4.5.0.2-1
 - Upgrade to 4.5.0.2 (#1266494)
 
 * Fri Sep 25 2015 Robert Scheck <robert@fedoraproject.org> 4.5.0.1-1
@@ -265,7 +280,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 * Fri Aug 07 2015 Robert Scheck <robert@fedoraproject.org> 4.4.13-1
 - Upgrade to 4.4.13
 
-* Thu Jul 21 2015 Robert Scheck <robert@fedoraproject.org> 4.4.12-1
+* Tue Jul 21 2015 Robert Scheck <robert@fedoraproject.org> 4.4.12-1
 - Upgrade to 4.4.12 (thanks to Remi Collet)
 
 * Mon Jul 06 2015 Robert Scheck <robert@fedoraproject.org> 4.4.11-1
@@ -654,10 +669,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 - Upstream released new version
 
 * Mon Oct 29 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.2-1
-* upstream released new version
+- upstream released new version
 
 * Mon Oct 22 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.1.2-1
-* upstream released new version
+- upstream released new version
 
 * Thu Sep 06 2007 Mike McGrath <mmcgrath@redhat.com> 2.11.0-1
 - Upstream released new version
