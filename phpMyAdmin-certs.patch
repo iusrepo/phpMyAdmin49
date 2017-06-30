@@ -1,0 +1,18 @@
+diff -up ./libraries/Util.php.rpm ./libraries/Util.php
+--- ./libraries/Util.php.rpm	2017-06-30 07:17:37.000000000 +0200
++++ ./libraries/Util.php	2017-06-30 07:18:14.000000000 +0200
+@@ -4782,12 +4782,12 @@ class Util
+          *
+          * See https://letsencrypt.org/certificates/
+          */
+-        $certs_dir = dirname(__file__) . '/certs/';
++        $certs_dir = '/etc/pki/tls/';
+         /* See code below for logic */
+         if ($ssl == CURLOPT_CAPATH) {
+             $curl_status &= curl_setopt($curl_handle, CURLOPT_CAPATH, $certs_dir);
+         } elseif ($ssl == CURLOPT_CAINFO) {
+-            $curl_status &= curl_setopt($curl_handle, CURLOPT_CAINFO, $certs_dir . 'cacert.pem');
++            $curl_status &= curl_setopt($curl_handle, CURLOPT_CAINFO, $certs_dir . 'cert.pem');
+         }
+ 
+         $curl_status &= curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER,true);

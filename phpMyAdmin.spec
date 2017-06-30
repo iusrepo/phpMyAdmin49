@@ -3,11 +3,12 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.7.1
+Version:	4.7.2
 Release:	1%{?dist}
-# MIT (js/jquery/, js/codemirror/),
+# MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
+# BSD (js/openlayers/)
 # GPLv2+ (the rest)
-License:	GPLv2+ and MIT
+License:	GPLv2+ and MIT and BSD
 Group:		Applications/Internet
 URL:		https://www.phpmyadmin.net/
 Source0:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
@@ -15,6 +16,9 @@ Source1:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-
 Source2:	phpMyAdmin-config.inc.php
 Source3:	phpMyAdmin.htaccess
 Source4:	phpMyAdmin.nginx
+
+# Redirect to system certificates
+Patch0:     phpMyAdmin-certs.patch
 
 BuildArch:	noarch
 
@@ -44,7 +48,7 @@ Requires:  php-xml
 Requires:  php-pcre
 Requires:  php-json
 Requires:  php-composer(phpmyadmin/sql-parser)   <  5
-Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1.2
+Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1.7
 Requires:  php-composer(phpmyadmin/motranslator) <  4
 Requires:  php-composer(phpmyadmin/motranslator) >= 3.0
 Requires:  php-composer(phpmyadmin/shapefile)    <  3
@@ -85,6 +89,15 @@ Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
 Requires:  php-xmlwriter
+# System certificates
+Requires:  ca-certificates
+
+# Bundled JS library
+Provides:  bundled(js-codemirror)
+Provides:  bundled(js-jqplot) = 1.0.9
+Provides:  bundled(js-jquery) = 3.1.1
+Provides:  bundled(js-openlayers)
+Provides:  bundled(js-tracekit)
 
 Provides:  phpmyadmin = %{version}-%{release}
 
@@ -111,6 +124,7 @@ like displaying BLOB-data as image or download-link and much more...
 
 %prep
 %setup -q -n %{pkgname}-%{version}-all-languages
+%patch0 -p1
 
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
@@ -157,6 +171,13 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{doc,examples}/
 rm -f doc/html/.buildinfo
 rm $RPM_BUILD_ROOT/%{_datadir}/%{name}/composer.*
 
+# JS libraries sources
+rm -r %{buildroot}%{_datadir}/%{name}/js/jquery/src
+rm -r %{buildroot}%{_datadir}/%{name}/js/openlayers/src
+
+# Bundled certificates
+rm -r %{buildroot}%{_datadir}/%{name}/libraries/certs
+
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
 mv -f config.sample.inc.php examples/
@@ -188,6 +209,11 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 
 
 %changelog
+* Fri Jun 30 2017 Remi Collet <remi@remirepo.net> 4.7.2-1
+- update to 4.7.2 (2017-06-29, regular maintenance release)
+- raise dependency on phpmyadmin/sql-parser version 4.1.7
+- always use system certificates
+
 * Fri Jun  2 2017 Remi Collet <remi@remirepo.net> 4.7.1-1
 - update to 4.7.1
 - raise dependency on phpmyadmin/sql-parser version 4.1.2
