@@ -3,8 +3,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.7.2
-Release:	2%{?dist}
+Version:	4.7.3
+Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -34,7 +34,7 @@ Suggests:	httpd
 #        "ext-xml": "*",
 #        "ext-pcre": "*",
 #        "ext-json": "*",
-#        "phpmyadmin/sql-parser": "^4.1.2",
+#        "phpmyadmin/sql-parser": "^4.1.9",
 #        "phpmyadmin/motranslator": "^3.0",
 #        "phpmyadmin/shapefile": "^2.0",
 #        "tecnickcom/tcpdf": "^6.2",
@@ -48,7 +48,7 @@ Requires:  php-xml
 Requires:  php-pcre
 Requires:  php-json
 Requires:  php-composer(phpmyadmin/sql-parser)   <  5
-Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1.7
+Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1.9
 Requires:  php-composer(phpmyadmin/motranslator) <  4
 Requires:  php-composer(phpmyadmin/motranslator) >= 3.0
 Requires:  php-composer(phpmyadmin/shapefile)    <  3
@@ -209,6 +209,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 
 
 %changelog
+* Tue Aug  1 2017 Remi Collet <remi@remirepo.net> 4.7.3-1
+- update to 4.7.3 (2017-07-20, regular maintenance release)
+- raise dependency on phpmyadmin/sql-parser version 4.1.9
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.7.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
