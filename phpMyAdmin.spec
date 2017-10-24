@@ -4,7 +4,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.7.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -187,9 +187,10 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/codemirror/LICENSE LICENSE-codemi
 
 
 %post
-# Generate a secret key for this installation
-sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)/" \
-    -i %{_sysconfdir}/%{pkgname}/config.inc.php
+# generate a 32 chars secret key for this install
+SECRET=$(printf "%04x%04x%04x%04x%04x%04x%04x%04x" $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM)
+sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
+    -i %{_sysconfdir}/%{name}/config.inc.php
 
 
 %files
@@ -209,6 +210,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$(cat /dev/urandom | tr -dc 
 
 
 %changelog
+* Tue Oct 24 2017 Remi Collet <remi@remirepo.net> 4.7.5-2
+- simplify scriptlet to avoid hang during update #1502966
+
 * Mon Oct 23 2017 Remi Collet <remi@remirepo.net> 4.7.5-1
 - update to 4.7.5 (2017-10-23, regular maintenance release)
 - raise dependency on phpmyadmin/sql-parser version 4.2.3
