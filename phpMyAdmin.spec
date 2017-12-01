@@ -3,8 +3,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.7.5
-Release:	2%{?dist}
+Version:	4.7.6
+Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -40,6 +40,8 @@ Suggests:	httpd
 #        "tecnickcom/tcpdf": "^6.2",
 #        "phpseclib/phpseclib": "^2.0",
 #        "google/recaptcha": "^1.1"
+#    "conflict": {
+#        "phpseclib/phpseclib": "2.0.8"
 Requires:  php(language) >= 5.5
 Requires:  php-mbstring
 Requires:  php-mysqli
@@ -57,7 +59,7 @@ Requires:  php-composer(tecnickcom/tcpdf)        <  7
 Requires:  php-composer(tecnickcom/tcpdf)        >= 6.2
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib)     <  3
-Requires:  php-composer(phpseclib/phpseclib)     >= 2.0
+Requires:  php-composer(phpseclib/phpseclib)     >= 2.0.9
 Requires:  php-composer(google/recaptcha)        <  2
 Requires:  php-composer(google/recaptcha)        >= 1.1
 # Autoloader
@@ -210,6 +212,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Fri Dec 1 2017 Remi Collet <remi@remirepo.net> 4.7.6-1
+- update to 4.7.6 (2017-12-01, regular maintenance release)
+- raise dependency on phpseclib/phpseclib 2.0.9
+
 * Tue Oct 24 2017 Remi Collet <remi@remirepo.net> 4.7.5-2
 - simplify scriptlet to avoid hang during update #1502966
 
