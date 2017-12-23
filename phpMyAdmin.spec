@@ -3,7 +3,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.7.6
+Version:	4.7.7
 Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
@@ -35,7 +35,7 @@ Suggests:	httpd
 #        "ext-pcre": "*",
 #        "ext-json": "*",
 #        "phpmyadmin/sql-parser": "^4.2.3",
-#        "phpmyadmin/motranslator": "^3.0",
+#        "phpmyadmin/motranslator": "^3.4",
 #        "phpmyadmin/shapefile": "^2.0",
 #        "tecnickcom/tcpdf": "^6.2",
 #        "phpseclib/phpseclib": "^2.0",
@@ -52,7 +52,7 @@ Requires:  php-json
 Requires:  php-composer(phpmyadmin/sql-parser)   <  5
 Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.2.3
 Requires:  php-composer(phpmyadmin/motranslator) <  4
-Requires:  php-composer(phpmyadmin/motranslator) >= 3.0
+Requires:  php-composer(phpmyadmin/motranslator) >= 3.4
 Requires:  php-composer(phpmyadmin/shapefile)    <  3
 Requires:  php-composer(phpmyadmin/shapefile)    >= 2.0
 Requires:  php-composer(tecnickcom/tcpdf)        <  7
@@ -212,6 +212,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Sat Dec 23 2017 Remi Collet <remi@remirepo.net> 4.7.7-1
+- update to 4.7.7 (2017-12-23, security release)
+- raise dependency on phpmyadmin/motranslator version 3.4
+
 * Fri Dec 1 2017 Remi Collet <remi@remirepo.net> 4.7.6-1
 - update to 4.7.6 (2017-12-01, regular maintenance release)
 - raise dependency on phpseclib/phpseclib 2.0.9
