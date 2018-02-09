@@ -4,7 +4,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.7.7
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -212,6 +212,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 4.7.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Sat Dec 23 2017 Remi Collet <remi@remirepo.net> 4.7.7-1
 - update to 4.7.7 (2017-12-23, security release)
 - raise dependency on phpmyadmin/motranslator version 3.4
