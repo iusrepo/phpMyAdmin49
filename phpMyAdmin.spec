@@ -4,7 +4,7 @@
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
 Version:	4.7.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -212,6 +212,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 4.7.7-3
+- Escape macros in %%changelog
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 4.7.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
@@ -796,7 +799,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 - Moved doc files to the doc dir
 
 * Tue Apr 04 2006 Mike McGrath <imlinux@gmail.com> 2.8.0.2-2
-- Moved everything to %{_datadir}
+- Moved everything to %%{_datadir}
 - Moved config file to /etc/
 - Used description from phpMyAdmin project info
 
