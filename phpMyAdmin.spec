@@ -3,13 +3,12 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.7.7
-Release:	3%{?dist}
+Version:	4.7.8
+Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
 License:	GPLv2+ and MIT and BSD
-Group:		Applications/Internet
 URL:		https://www.phpmyadmin.net/
 Source0:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
 Source1:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz.asc
@@ -35,7 +34,7 @@ Suggests:	httpd
 #        "ext-pcre": "*",
 #        "ext-json": "*",
 #        "phpmyadmin/sql-parser": "^4.2.3",
-#        "phpmyadmin/motranslator": "^3.4",
+#        "phpmyadmin/motranslator": "^4.0",
 #        "phpmyadmin/shapefile": "^2.0",
 #        "tecnickcom/tcpdf": "^6.2",
 #        "phpseclib/phpseclib": "^2.0",
@@ -49,19 +48,28 @@ Requires:  php-openssl
 Requires:  php-xml
 Requires:  php-pcre
 Requires:  php-json
+%if 0%{?fedora} >= 27 || 0%{?rhel} >= 8
+Requires:  (php-composer(phpmyadmin/sql-parser)   >= 4.2.3 with php-composer(phpmyadmin/sql-parser)   < 5)
+Requires:  (php-composer(phpmyadmin/motranslator) >= 4.0   with php-composer(phpmyadmin/motranslator) < 5)
+Requires:  (php-composer(phpmyadmin/shapefile)    >= 2.0   with php-composer(phpmyadmin/shapefile)    < 3)
+Requires:  (php-composer(tecnickcom/tcpdf)        >= 6.2   with php-composer(tecnickcom/tcpdf)        < 7)
+Requires:  (php-composer(phpseclib/phpseclib)     >= 2.0.9 with php-composer(phpseclib/phpseclib)     < 3)
+Requires:  (php-composer(google/recaptcha)        >= 1.1   with php-composer(google/recaptcha)        < 2)
+%else
 Requires:  php-composer(phpmyadmin/sql-parser)   <  5
 Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.2.3
-Requires:  php-composer(phpmyadmin/motranslator) <  4
-Requires:  php-composer(phpmyadmin/motranslator) >= 3.4
+Requires:  php-composer(phpmyadmin/motranslator) <  5
+Requires:  php-composer(phpmyadmin/motranslator) >= 4.0
 Requires:  php-composer(phpmyadmin/shapefile)    <  3
 Requires:  php-composer(phpmyadmin/shapefile)    >= 2.0
 Requires:  php-composer(tecnickcom/tcpdf)        <  7
 Requires:  php-composer(tecnickcom/tcpdf)        >= 6.2
-Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib)     <  3
 Requires:  php-composer(phpseclib/phpseclib)     >= 2.0.9
 Requires:  php-composer(google/recaptcha)        <  2
 Requires:  php-composer(google/recaptcha)        >= 1.1
+%endif
+Requires:  php-tcpdf-dejavu-sans-fonts
 # Autoloader
 Requires:  php-composer(fedora/autoloader)
 # From composer.json, "suggest": {
@@ -212,6 +220,11 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Wed Feb 21 2018 Remi Collet <remi@remirepo.net> 4.7.8-1
+- update to 4.7.8 (2018-02-20, security release)
+- raise dependency on phpmyadmin/motranslator version 4.0
+- use range dependencies on F27+
+
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 4.7.7-3
 - Escape macros in %%changelog
 
