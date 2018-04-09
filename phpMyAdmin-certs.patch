@@ -1,18 +1,18 @@
-diff -up ./libraries/Util.php.rpm ./libraries/Util.php
---- ./libraries/Util.php.rpm	2017-06-30 07:17:37.000000000 +0200
-+++ ./libraries/Util.php	2017-06-30 07:18:14.000000000 +0200
-@@ -4782,12 +4782,12 @@ class Util
+diff -up ./libraries/classes/Utils/HttpRequest.php.rpm ./libraries/classes/Utils/HttpRequest.php
+--- ./libraries/classes/Utils/HttpRequest.php.rpm	2018-03-01 15:05:29.388126314 +0100
++++ ./libraries/classes/Utils/HttpRequest.php	2018-03-01 15:06:51.922563502 +0100
+@@ -139,12 +139,12 @@ class HttpRequest
           *
           * See https://letsencrypt.org/certificates/
           */
--        $certs_dir = dirname(__file__) . '/certs/';
-+        $certs_dir = '/etc/pki/tls/';
+-        $certsDir = dirname(__file__) . '/../../certs/';
++        $certsDir = '/etc/pki/tls/';
          /* See code below for logic */
          if ($ssl == CURLOPT_CAPATH) {
-             $curl_status &= curl_setopt($curl_handle, CURLOPT_CAPATH, $certs_dir);
+             $curlStatus &= curl_setopt($curlHandle, CURLOPT_CAPATH, $certsDir);
          } elseif ($ssl == CURLOPT_CAINFO) {
--            $curl_status &= curl_setopt($curl_handle, CURLOPT_CAINFO, $certs_dir . 'cacert.pem');
-+            $curl_status &= curl_setopt($curl_handle, CURLOPT_CAINFO, $certs_dir . 'cert.pem');
+-            $curlStatus &= curl_setopt($curlHandle, CURLOPT_CAINFO, $certsDir . 'cacert.pem');
++            $curlStatus &= curl_setopt($curlHandle, CURLOPT_CAINFO, $certsDir . 'cert.pem');
          }
  
-         $curl_status &= curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER,true);
+         $curlStatus &= curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);

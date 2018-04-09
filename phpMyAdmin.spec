@@ -3,7 +3,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.7.9
+Version:	4.8.0
 Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
@@ -28,48 +28,45 @@ Suggests:	httpd
 
 # From composer.json, "require": {
 #        "php": ">=5.5.0",
-#        "ext-mbstring": "*",
 #        "ext-mysqli": "*",
 #        "ext-xml": "*",
 #        "ext-pcre": "*",
 #        "ext-json": "*",
+#        "ext-ctype": "*",
+#        "ext-hash": "*",
 #        "phpmyadmin/sql-parser": "^4.2.3",
 #        "phpmyadmin/motranslator": "^4.0",
 #        "phpmyadmin/shapefile": "^2.0",
 #        "tecnickcom/tcpdf": "^6.2",
 #        "phpseclib/phpseclib": "^2.0",
-#        "google/recaptcha": "^1.1"
+#        "google/recaptcha": "^1.1",
+#        "psr/container": "^1.0",
+#        "twig/twig": "^1.34",
+#        "twig/extensions": "~1.5.1",
+#        "symfony/expression-language": "^3.2 || ^2.8",
+#        "symfony/polyfill-mbstring": "^1.3"
 #    "conflict": {
-#        "phpseclib/phpseclib": "2.0.8"
+#        "phpseclib/phpseclib": "2.0.8",
+#        "tecnickcom/tcpdf": "<6.2",
+#        "pragmarx/google2fa": "<3.0.1",
+#        "bacon/bacon-qr-code": "<1.0",
+#        "samyoul/u2f-php-server": "<1.1"
 Requires:  php(language) >= 5.5
-Requires:  php-mbstring
 Requires:  php-mysqli
-Requires:  php-openssl
 Requires:  php-xml
 Requires:  php-pcre
 Requires:  php-json
-%if 0%{?fedora} >= 27 || 0%{?rhel} >= 8
-Requires:  (php-composer(phpmyadmin/sql-parser)   >= 4.2.3 with php-composer(phpmyadmin/sql-parser)   < 5)
-Requires:  (php-composer(phpmyadmin/motranslator) >= 4.0   with php-composer(phpmyadmin/motranslator) < 5)
-Requires:  (php-composer(phpmyadmin/shapefile)    >= 2.0   with php-composer(phpmyadmin/shapefile)    < 3)
-Requires:  (php-composer(tecnickcom/tcpdf)        >= 6.2   with php-composer(tecnickcom/tcpdf)        < 7)
-Requires:  (php-composer(phpseclib/phpseclib)     >= 2.0.9 with php-composer(phpseclib/phpseclib)     < 3)
-Requires:  (php-composer(google/recaptcha)        >= 1.1   with php-composer(google/recaptcha)        < 2)
-%else
-Requires:  php-composer(phpmyadmin/sql-parser)   <  5
-Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.2.3
-Requires:  php-composer(phpmyadmin/motranslator) <  5
-Requires:  php-composer(phpmyadmin/motranslator) >= 4.0
-Requires:  php-composer(phpmyadmin/shapefile)    <  3
-Requires:  php-composer(phpmyadmin/shapefile)    >= 2.0
-Requires:  php-composer(tecnickcom/tcpdf)        <  7
-Requires:  php-composer(tecnickcom/tcpdf)        >= 6.2
-Requires:  php-composer(phpseclib/phpseclib)     <  3
-Requires:  php-composer(phpseclib/phpseclib)     >= 2.0.9
-Requires:  php-composer(google/recaptcha)        <  2
-Requires:  php-composer(google/recaptcha)        >= 1.1
-%endif
-Requires:  php-tcpdf-dejavu-sans-fonts
+Requires:  php-ctype
+Requires:  php-hash
+Requires:  (php-composer(phpmyadmin/sql-parser)       >= 4.2.3 with php-composer(phpmyadmin/sql-parser)       < 5)
+Requires:  (php-composer(phpmyadmin/motranslator)     >= 4.0   with php-composer(phpmyadmin/motranslator)     < 5)
+Requires:  (php-composer(phpmyadmin/shapefile)        >= 2.0   with php-composer(phpmyadmin/shapefile)        < 3)
+Requires:  (php-composer(phpseclib/phpseclib)         >= 2.0.9 with php-composer(phpseclib/phpseclib)         < 3)
+Requires:  (php-composer(google/recaptcha)            >= 1.1   with php-composer(google/recaptcha)            < 2)
+Requires:  (php-composer(psr/container)               >= 1.0   with php-composer(psr/container)               < 2)
+Requires:  (php-composer(twig/twig)                   >= 1.34  with php-composer(twig/twig)                   < 2)
+Requires:  (php-composer(twig/extensions)             >= 1.5.1 with php-composer(twig/extensions)             < 2)
+Requires:  (php-composer(symfony/expression-language) >= 2.8   with php-composer(symfony/expression-language) < 4)
 # Autoloader
 Requires:  php-composer(fedora/autoloader)
 # From composer.json, "suggest": {
@@ -80,18 +77,28 @@ Requires:  php-composer(fedora/autoloader)
 #        "ext-bz2": "For bzip2 import and export",
 #        "ext-zip": "For zip import and export",
 #        "ext-gd2": "For image transformations",
-#        "tecnickcom/tcpdf": "For PDF support"
+#        "ext-mbstring": "For best performance",
+#        "tecnickcom/tcpdf": "For PDF support",
+#        "pragmarx/google2fa": "For 2FA authentication",
+#        "bacon/bacon-qr-code": "For 2FA authentication",
+#        "samyoul/u2f-php-server": "For FIDO U2F authentication"
 Requires:  php-openssl
 Requires:  php-curl
 Requires:  php-zlib
 Requires:  php-bz2
 Requires:  php-zip
 Requires:  php-gd
+# Keep mandatory to avoid polyfill
+Requires:  php-mbstring
 Recommends: php-opcache
-# From phpcompatinfo reports for 4.7.0
+Recommends: php-composer(tecnickcom/tcpdf)       >= 6.2
+Recommends: php-composer(pragmarx/google2fa)     >= 3.0.1
+Recommends: php-composer(bacon/bacon-qr-code)    >= 1.0
+Recommends: php-composer(samyoul/u2f-php-server) >= 1.1
+Recommends: php-tcpdf-dejavu-sans-fonts          >= 6.2
+# From phpcompatinfo reports for 4.8.0
 Requires:  php-date
 Requires:  php-filter
-Requires:  php-hash
 Requires:  php-iconv
 Requires:  php-libxml
 Requires:  php-recode
@@ -105,7 +112,7 @@ Requires:  ca-certificates
 # Bundled JS library
 Provides:  bundled(js-codemirror)
 Provides:  bundled(js-jqplot) = 1.0.9
-Provides:  bundled(js-jquery) = 3.1.1
+Provides:  bundled(js-jquery) = 3.2.1
 Provides:  bundled(js-openlayers)
 Provides:  bundled(js-tracekit)
 
@@ -144,6 +151,8 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
+    -e '/AUTOLOAD_FILE/s@./vendor@%{_datadir}/%{name}/vendor@' \
+    -e '/TEMP_DIR/s@./tmp@%{_localstatedir}/lib/%{name}/temp@' \
     -i libraries/vendor_config.php
 
 # Generate autoloader
@@ -153,14 +162,27 @@ cat << 'EOF' | tee vendor/autoload.php
 /* Autoloader for phpMyAdmin and its dependencies */
 
 require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
-\Fedora\Autoloader\Autoload::addPsr4('PMA\\', dirname(__DIR__));
+\Fedora\Autoloader\Autoload::addPsr4('PhpMyAdmin\\',        dirname(__DIR__) . '/libraries/classes');
+\Fedora\Autoloader\Autoload::addPsr4('PhpMyAdmin\\Setup\\', dirname(__DIR__) . '/setup/lib');
 \Fedora\Autoloader\Dependencies::required([
     '%{_datadir}/php/PhpMyAdmin/SqlParser/autoload.php',
     '%{_datadir}/php/PhpMyAdmin/MoTranslator/autoload.php',
     '%{_datadir}/php/PhpMyAdmin/ShapeFile/autoload.php',
-    '%{_datadir}/php/tcpdf/autoload.php',
     '%{_datadir}/php/phpseclib/autoload.php',
     '%{_datadir}/php/ReCaptcha/autoload.php',
+    '%{_datadir}/php/Psr/Container/autoload.php',
+    '%{_datadir}/php/Twig/autoload.php',
+    '%{_datadir}/php/Twig/Extensions/autoload.php',
+    [
+        '%{_datadir}/php/Symfony3/Component/ExpressionLanguage/autoload.php',
+        '%{_datadir}/php/Symfony/Component/ExpressionLanguage/autoload.php',
+    ],
+]);
+\Fedora\Autoloader\Dependencies::optional([
+    '%{_datadir}/php/tcpdf/autoload.php',
+    '%{_datadir}/php/PragmaRX/Google2FA/autoload.php',
+    '%{_datadir}/php/BaconQrCode/autoload.php',
+    '%{_datadir}/php/Samyoul/U2F/U2FServer/autoload.php',
 ]);
 EOF
 
@@ -170,7 +192,7 @@ EOF
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config}/
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/%{pkgname}/{upload,save,config,temp}/
 cp -ad * $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/
 install -Dpm 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
 install -Dpm 0640 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{pkgname}/config.inc.php
@@ -182,8 +204,8 @@ rm -f doc/html/.buildinfo
 rm $RPM_BUILD_ROOT/%{_datadir}/%{name}/composer.*
 
 # JS libraries sources
-rm -r %{buildroot}%{_datadir}/%{name}/js/jquery/src
-rm -r %{buildroot}%{_datadir}/%{name}/js/openlayers/src
+#rm -r %{buildroot}%{_datadir}/%{name}/js/jquery/src
+#rm -r %{buildroot}%{_datadir}/%{name}/js/openlayers/src
 
 # Bundled certificates
 rm -r %{buildroot}%{_datadir}/%{name}/libraries/certs
@@ -192,8 +214,8 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
 mv -f config.sample.inc.php examples/
 
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/codemirror/LICENSE LICENSE-codemirror
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/vendor/jquery/MIT-LICENSE.txt LICENSE-jquery
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/vendor/codemirror/LICENSE LICENSE-codemirror
 
 
 %post
@@ -217,9 +239,21 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/temp/
 
 
 %changelog
+* Mon Apr  9 2018 Remi Collet <remi@remirepo.net> 4.8.0-1
+- update to 4.8.0 (2018-04-07, new features release)
+- add dependency on psr/container
+- add dependency on twig/twig
+- add dependency on twig/extensions
+- add dependency on symfony/expression-language
+- add optional dependency on bacon/bacon-qr-code
+- add optional dependency on pragmarx/google2fa, review #1552442
+- add optional dependency on samyoul/u2f-php-server, review #1552450
+- dependency on tecnickcom/tcpdf is now optional
+
 * Tue Mar  6 2018 Remi Collet <remi@remirepo.net> - 4.7.9-1
 - Update to 4.7.9 (2018-03-05, maintenance release)
 
