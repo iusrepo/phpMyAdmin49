@@ -3,7 +3,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.8.0
+Version:	4.8.0.1
 Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
@@ -67,6 +67,7 @@ Requires:  (php-composer(psr/container)               >= 1.0   with php-composer
 Requires:  (php-composer(twig/twig)                   >= 1.34  with php-composer(twig/twig)                   < 2)
 Requires:  (php-composer(twig/extensions)             >= 1.5.1 with php-composer(twig/extensions)             < 2)
 Requires:  (php-composer(symfony/expression-language) >= 2.8   with php-composer(symfony/expression-language) < 4)
+Requires:  (php-composer(symfony/polyfill-mbstring)   >= 1.3   with php-composer(symfony/polyfill-mbstring)   < 2)
 # Autoloader
 Requires:  php-composer(fedora/autoloader)
 # From composer.json, "suggest": {
@@ -88,7 +89,6 @@ Requires:  php-zlib
 Requires:  php-bz2
 Requires:  php-zip
 Requires:  php-gd
-# Keep mandatory to avoid polyfill
 Requires:  php-mbstring
 Recommends: php-opcache
 Recommends: php-composer(tecnickcom/tcpdf)       >= 6.2
@@ -177,6 +177,7 @@ require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
         '%{_datadir}/php/Symfony3/Component/ExpressionLanguage/autoload.php',
         '%{_datadir}/php/Symfony/Component/ExpressionLanguage/autoload.php',
     ],
+    '%{_datadir}/php/Symfony/Polyfill/autoload.php',
 ]);
 \Fedora\Autoloader\Dependencies::optional([
     '%{_datadir}/php/tcpdf/autoload.php',
@@ -243,6 +244,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Thu Apr 19 2018 Remi Collet <remi@remirepo.net> - 4.8.0.1-1
+- update to 4.8.0.1 (2018-04-19, security release)
+- add dependency on symfony/polyfill-mbstring for PHP < 7.2
+
 * Mon Apr  9 2018 Remi Collet <remi@remirepo.net> 4.8.0-1
 - update to 4.8.0 (2018-04-07, new features release)
 - add dependency on psr/container
