@@ -3,7 +3,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.8.1
+Version:	4.8.2
 Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
@@ -244,6 +244,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Fri Jun 22 2018 Remi Collet <remi@remirepo.net> - 4.8.2-1
+- update to 4.8.2 (2018-06-21, important security fix)
+
 * Fri May 25 2018 Remi Collet <remi@remirepo.net> - 4.8.1-1
 - update to 4.8.1 (2018-05-25, bug fix release)
 
