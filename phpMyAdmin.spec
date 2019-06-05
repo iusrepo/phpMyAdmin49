@@ -3,8 +3,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin
-Version:	4.8.5
-Release:	2%{?dist}
+Version:	4.9.0.1
+Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -34,7 +34,7 @@ Suggests:	httpd
 #        "ext-json": "*",
 #        "ext-ctype": "*",
 #        "ext-hash": "*",
-#        "phpmyadmin/sql-parser": "^4.2.3",
+#        "phpmyadmin/sql-parser": "^4.3.2",
 #        "phpmyadmin/motranslator": "^4.0",
 #        "phpmyadmin/shapefile": "^2.0",
 #        "tecnickcom/tcpdf": "^6.2",
@@ -58,7 +58,7 @@ Requires:  php-pcre
 Requires:  php-json
 Requires:  php-ctype
 Requires:  php-hash
-Requires:  (php-composer(phpmyadmin/sql-parser)       >= 4.2.3 with php-composer(phpmyadmin/sql-parser)       < 5)
+Requires:  (php-composer(phpmyadmin/sql-parser)       >= 4.3.2 with php-composer(phpmyadmin/sql-parser)       < 5)
 Requires:  (php-composer(phpmyadmin/motranslator)     >= 4.0   with php-composer(phpmyadmin/motranslator)     < 5)
 Requires:  (php-composer(phpmyadmin/shapefile)        >= 2.0   with php-composer(phpmyadmin/shapefile)        < 3)
 Requires:  (php-composer(phpseclib/phpseclib)         >= 2.0.9 with php-composer(phpseclib/phpseclib)         < 3)
@@ -244,6 +244,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Tue Jun  4 2019 Remi Collet <remi@remirepo.net> - 4.9.0.1-1
+- update to 4.9.0.1 (2019-06-04, important security fixes)
+- raise dependency on phpmyadmin/sql-parser version 4.3.2
+
 * Sat Feb 02 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.8.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
