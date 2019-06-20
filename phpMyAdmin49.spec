@@ -21,8 +21,6 @@ Patch0:     phpMyAdmin-certs.patch
 BuildArch:	noarch
 
 Requires(pre): shadow-utils
-Requires:	nginx-filesystem
-Requires:	httpd-filesystem
 
 # From composer.json, "require": {
 #        "php": ">=5.5.0",
@@ -105,6 +103,28 @@ Provides:  %{pkgname}%{?_isa} = %{version}-%{release}
 Conflicts: %{pkgname} < %{version}-%{release}
 
 
+%package httpd
+Summary:    Apache HTTP Server configuration for phpMyAdmin
+BuildArch:  noarch
+Requires:   %{name} = %{version}-%{release}
+Requires:   httpd
+
+
+%description httpd
+Apache HTTP Server configuration for phpMyAdmin.
+
+
+%package nginx
+Summary:    Nginx configuration for phpMyAdmin
+BuildArch:  noarch
+Requires:   %{name} = %{version}-%{release}
+Requires:   nginx
+
+
+%description nginx
+Nginx configuration for phpMyAdmin.
+
+
 %description
 phpMyAdmin is a tool written in PHP intended to handle the administration of
 MySQL over the World Wide Web. Most frequently used operations are supported
@@ -185,8 +205,6 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 %{_datadir}/%{pkgname}/
 %dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
-%config(noreplace) %{_sysconfdir}/nginx/default.d/%{pkgname}.conf
 %dir %{_localstatedir}/lib/%{pkgname}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
@@ -194,9 +212,18 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/temp/
 
 
+%files httpd
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{pkgname}.conf
+
+
+%files nginx
+%config(noreplace) %{_sysconfdir}/nginx/default.d/%{pkgname}.conf
+
+
 %changelog
 * Thu Jun 20 2019 Carl George <carl@george.computer> - 4.9.0.1-2
 - Port from Fedora to IUS
+- Move httpd and nginx config files to their own subpackages
 
 * Tue Jun  4 2019 Remi Collet <remi@remirepo.net> - 4.9.0.1-1
 - update to 4.9.0.1 (2019-06-04, important security fixes)
