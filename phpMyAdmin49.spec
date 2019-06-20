@@ -1,17 +1,16 @@
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global pkgname	phpMyAdmin
 
 Summary:	Handle the administration of MySQL over the World Wide Web
-Name:		phpMyAdmin
+Name:		phpMyAdmin49
 Version:	4.9.0.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
 License:	GPLv2+ and MIT and BSD
 URL:		https://www.phpmyadmin.net/
-Source0:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
-Source1:	https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz.asc
+Source0:	https://files.phpmyadmin.net/%{pkgname}/%{version}/%{pkgname}-%{version}-all-languages.tar.xz
+Source1:	https://files.phpmyadmin.net/%{pkgname}/%{version}/%{pkgname}-%{version}-all-languages.tar.xz.asc
 Source2:	phpMyAdmin-config.inc.php
 Source3:	phpMyAdmin.htaccess
 Source4:	phpMyAdmin.nginx
@@ -21,10 +20,9 @@ Patch0:     phpMyAdmin-certs.patch
 
 BuildArch:	noarch
 
+Requires(pre): shadow-utils
 Requires:	nginx-filesystem
 Requires:	httpd-filesystem
-Requires:	php(httpd)
-Suggests:	httpd
 
 # From composer.json, "require": {
 #        "php": ">=5.5.0",
@@ -58,18 +56,6 @@ Requires:  php-pcre
 Requires:  php-json
 Requires:  php-ctype
 Requires:  php-hash
-Requires:  (php-composer(phpmyadmin/sql-parser)       >= 4.3.2 with php-composer(phpmyadmin/sql-parser)       < 5)
-Requires:  (php-composer(phpmyadmin/motranslator)     >= 4.0   with php-composer(phpmyadmin/motranslator)     < 5)
-Requires:  (php-composer(phpmyadmin/shapefile)        >= 2.0   with php-composer(phpmyadmin/shapefile)        < 3)
-Requires:  (php-composer(phpseclib/phpseclib)         >= 2.0.9 with php-composer(phpseclib/phpseclib)         < 3)
-Requires:  (php-composer(google/recaptcha)            >= 1.1   with php-composer(google/recaptcha)            < 2)
-Requires:  (php-composer(psr/container)               >= 1.0   with php-composer(psr/container)               < 2)
-Requires:  (php-composer(twig/twig)                   >= 1.34  with php-composer(twig/twig)                   < 2)
-Requires:  (php-composer(twig/extensions)             >= 1.5.1 with php-composer(twig/extensions)             < 2)
-Requires:  (php-composer(symfony/expression-language) >= 2.8   with php-composer(symfony/expression-language) < 4)
-Requires:  (php-composer(symfony/polyfill-mbstring)   >= 1.3   with php-composer(symfony/polyfill-mbstring)   < 2)
-# Autoloader
-Requires:  php-composer(fedora/autoloader)
 # From composer.json, "suggest": {
 #        "ext-openssl": "Cookie encryption",
 #        "ext-curl": "Updates checking",
@@ -90,12 +76,6 @@ Requires:  php-bz2
 Requires:  php-zip
 Requires:  php-gd
 Requires:  php-mbstring
-Recommends: php-opcache
-Recommends: php-composer(tecnickcom/tcpdf)       >= 6.2
-Recommends: php-composer(pragmarx/google2fa)     >= 3.0.1
-Recommends: php-composer(bacon/bacon-qr-code)    >= 1.0
-Recommends: php-composer(samyoul/u2f-php-server) >= 1.1
-Recommends: php-tcpdf-dejavu-sans-fonts          >= 6.2
 # From phpcompatinfo reports for 4.8.0
 Requires:  php-date
 Requires:  php-filter
@@ -117,6 +97,12 @@ Provides:  bundled(js-openlayers)
 Provides:  bundled(js-tracekit)
 
 Provides:  phpmyadmin = %{version}-%{release}
+Provides:  phpmyadmin49 = %{version}-%{release}
+
+# safe replacement
+Provides:  %{pkgname} = %{version}-%{release}
+Provides:  %{pkgname}%{?_isa} = %{version}-%{release}
+Conflicts: %{pkgname} < %{version}-%{release}
 
 
 %description
@@ -146,46 +132,12 @@ like displaying BLOB-data as image or download-link and much more...
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
-    -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{name}/'@" \
+    -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{pkgname}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{pkgname}/config/config.inc.php@" \
-%if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
-%endif
-    -e '/AUTOLOAD_FILE/s@./vendor@%{_datadir}/%{name}/vendor@' \
-    -e '/TEMP_DIR/s@./tmp@%{_localstatedir}/lib/%{name}/temp@' \
+    -e '/AUTOLOAD_FILE/s@./vendor@%{_datadir}/%{pkgname}/vendor@' \
+    -e '/TEMP_DIR/s@./tmp@%{_localstatedir}/lib/%{pkgname}/temp@' \
     -i libraries/vendor_config.php
-
-# Generate autoloader
-rm -rf vendor/*
-cat << 'EOF' | tee vendor/autoload.php
-<?php
-/* Autoloader for phpMyAdmin and its dependencies */
-
-require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
-\Fedora\Autoloader\Autoload::addPsr4('PhpMyAdmin\\',        dirname(__DIR__) . '/libraries/classes');
-\Fedora\Autoloader\Autoload::addPsr4('PhpMyAdmin\\Setup\\', dirname(__DIR__) . '/setup/lib');
-\Fedora\Autoloader\Dependencies::required([
-    '%{_datadir}/php/PhpMyAdmin/SqlParser/autoload.php',
-    '%{_datadir}/php/PhpMyAdmin/MoTranslator/autoload.php',
-    '%{_datadir}/php/PhpMyAdmin/ShapeFile/autoload.php',
-    '%{_datadir}/php/phpseclib/autoload.php',
-    '%{_datadir}/php/ReCaptcha/autoload.php',
-    '%{_datadir}/php/Psr/Container/autoload.php',
-    '%{_datadir}/php/Twig/autoload.php',
-    '%{_datadir}/php/Twig/Extensions/autoload.php',
-    [
-        '%{_datadir}/php/Symfony3/Component/ExpressionLanguage/autoload.php',
-        '%{_datadir}/php/Symfony/Component/ExpressionLanguage/autoload.php',
-    ],
-    '%{_datadir}/php/Symfony/Polyfill/autoload.php',
-]);
-\Fedora\Autoloader\Dependencies::optional([
-    '%{_datadir}/php/tcpdf/autoload.php',
-    '%{_datadir}/php/PragmaRX/Google2FA/autoload.php',
-    '%{_datadir}/php/BaconQrCode/autoload.php',
-    '%{_datadir}/php/Samyoul/U2F/U2FServer/autoload.php',
-]);
-EOF
 
 
 %build
@@ -202,14 +154,14 @@ install -Dpm 0644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/%{pkg
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{[CDLR]*,*.txt,config.sample.inc.php}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/{doc,examples}/
 rm -f doc/html/.buildinfo
-rm $RPM_BUILD_ROOT/%{_datadir}/%{name}/composer.*
+rm $RPM_BUILD_ROOT/%{_datadir}/%{pkgname}/composer.*
 
 # JS libraries sources
 #rm -r %{buildroot}%{_datadir}/%{name}/js/jquery/src
 #rm -r %{buildroot}%{_datadir}/%{name}/js/openlayers/src
 
 # Bundled certificates
-rm -r %{buildroot}%{_datadir}/%{name}/libraries/certs
+rm -r %{buildroot}%{_datadir}/%{pkgname}/libraries/certs
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/
 ln -s ../../../..%{_pkgdocdir}/html/ $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/doc/html
@@ -223,11 +175,10 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/vendor/codemirror/LICENSE LICENSE
 # generate a 32 chars secret key for this install
 SECRET=$(printf "%04x%04x%04x%04x%04x%04x%04x%04x" $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM)
 sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
-    -i %{_sysconfdir}/%{name}/config.inc.php
+    -i %{_sysconfdir}/%{pkgname}/config.inc.php
 
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license LICENSE*
 %doc ChangeLog README DCO doc/html/ examples/
 %doc composer.json
@@ -244,6 +195,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Thu Jun 20 2019 Carl George <carl@george.computer> - 4.9.0.1-2
+- Port from Fedora to IUS
+
 * Tue Jun  4 2019 Remi Collet <remi@remirepo.net> - 4.9.0.1-1
 - update to 4.9.0.1 (2019-06-04, important security fixes)
 - raise dependency on phpmyadmin/sql-parser version 4.3.2
