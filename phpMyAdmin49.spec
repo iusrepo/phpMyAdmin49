@@ -191,6 +191,20 @@ mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/vendor/jquery/MIT-LICENSE.txt LIC
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{pkgname}/js/vendor/codemirror/LICENSE LICENSE-codemirror
 
 
+%pre
+# add phpmyadmin group
+getent group phpmyadmin >/dev/null || groupadd -r phpmyadmin
+# add phpmyadmin user
+getent passwd phpmyadmin >/dev/null || \
+    useradd -r -g phpmyadmin -d %{_localstatedir}/lib/%{pkgname} \
+    -s /sbin/nologin -c "phpMyAdmin" phpmyadmin
+# add apache to phpmyadmin group
+getent passwd apache >/dev/null && gpasswd -a apache phpmyadmin
+# add php-fpm to phpmyadmin group
+getent passwd php-fpm >/dev/null && gpasswd -a php-fpm phpmyadmin
+exit 0
+
+
 %post
 # generate a 32 chars secret key for this install
 SECRET=$(printf "%04x%04x%04x%04x%04x%04x%04x%04x" $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM)
@@ -203,13 +217,13 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 %doc ChangeLog README DCO doc/html/ examples/
 %doc composer.json
 %{_datadir}/%{pkgname}/
-%dir %attr(0750,root,apache) %{_sysconfdir}/%{pkgname}/
-%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{pkgname}/config.inc.php
+%dir %attr(0750,root,phpmyadmin) %{_sysconfdir}/%{pkgname}/
+%config(noreplace) %attr(0640,root,phpmyadmin) %{_sysconfdir}/%{pkgname}/config.inc.php
 %dir %{_localstatedir}/lib/%{pkgname}/
-%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/upload/
-%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/save/
-%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/config/
-%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{pkgname}/temp/
+%dir %attr(0770,phpmyadmin,phpmyadmin) %{_localstatedir}/lib/%{pkgname}/upload/
+%dir %attr(0770,phpmyadmin,phpmyadmin) %{_localstatedir}/lib/%{pkgname}/save/
+%dir %attr(0770,phpmyadmin,phpmyadmin) %{_localstatedir}/lib/%{pkgname}/config/
+%dir %attr(0770,phpmyadmin,phpmyadmin) %{_localstatedir}/lib/%{pkgname}/temp/
 
 
 %files httpd
@@ -224,6 +238,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 * Thu Jun 20 2019 Carl George <carl@george.computer> - 4.9.0.1-2
 - Port from Fedora to IUS
 - Move httpd and nginx config files to their own subpackages
+- Add phpmyadmin user and group
 
 * Tue Jun  4 2019 Remi Collet <remi@remirepo.net> - 4.9.0.1-1
 - update to 4.9.0.1 (2019-06-04, important security fixes)
