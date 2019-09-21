@@ -2,8 +2,8 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin49
-Version:	4.9.0.1
-Release:	2%{?dist}
+Version:	4.9.1
+Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
 # GPLv2+ (the rest)
@@ -235,6 +235,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Sat Sep 21 2019 Carl George <carl@george.computer> - 4.9.1-1
+- Latest upstream
+
 * Thu Jun 20 2019 Carl George <carl@george.computer> - 4.9.0.1-2
 - Port from Fedora to IUS
 - Move httpd and nginx config files to their own subpackages
