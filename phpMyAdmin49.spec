@@ -2,7 +2,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin49
-Version:	4.9.3
+Version:	4.9.5
 Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
@@ -235,6 +235,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Sun Apr 19 2020 Carl George <carl@george.computer> - 4.9.5-1
+- Latest upstream
+
 * Tue Dec 31 2019 Carl George <carl@george.computer> - 4.9.3-1
 - Latest upstream
 
