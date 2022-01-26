@@ -2,7 +2,7 @@
 
 Summary:	Handle the administration of MySQL over the World Wide Web
 Name:		phpMyAdmin49
-Version:	4.9.7
+Version:	4.9.8
 Release:	1%{?dist}
 # MIT (js/jquery/, js/jqplot, js/codemirror/, js/tracekit/)
 # BSD (js/openlayers/)
@@ -79,7 +79,6 @@ Requires:  php-date
 Requires:  php-filter
 Requires:  php-iconv
 Requires:  php-libxml
-Requires:  php-recode
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
@@ -235,6 +234,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Wed Jan 26 2022 Jakub Bartak <jbartak@qualityunit.com> - 4.9.8-1
+- Latest upstream
+
 * Sat Oct 02 2021 Carl George <carl@george.computer> - 4.9.7-1
 - Latest upstream
 
